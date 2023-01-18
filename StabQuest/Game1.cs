@@ -62,7 +62,7 @@ namespace StabQuest
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             _font = this.Content.Load<SpriteFont>("MyFont");
-            _dungeonTileSet = this.Content.Load<Texture2D>("Images/Dungeon_Tileset");
+            _dungeonTileSet = this.Content.Load<Texture2D>("Images/Dungeon_Tileset");   
             _characterSpriteSheet = this.Content.Load<Texture2D>("Images/Dungeon_Character_2");
         }
 

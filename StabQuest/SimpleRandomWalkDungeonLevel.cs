@@ -63,7 +63,7 @@ namespace StabQuest
 
         private void GenerateTiles(int level)
         {
-            var positions = DungeonHelper.GetRandomWalkDungeon(new Vector2(24, 24 / 2), 24, 10 + level);
+            var positions = DungeonHelper.GetRandomWalkDungeon(new Vector2(24, 24 / 2), 10, 100 + (10* level));
 
             // add floor tiles
             foreach (var position in positions)
