@@ -15,10 +15,10 @@ namespace StabQuest
 
 
         private SpriteFont _font;
-        private Texture2D _wallTexture;
-        private Texture2D _grassTexture;
-        private Texture2D _playerTexture;
-        private Texture2D _doorTexture;
+        //private Texture2D _wallTexture;
+        //private Texture2D _grassTexture;
+        //private Texture2D _playerTexture;
+        //private Texture2D _doorTexture;
         private Texture2D _dungeonTileSet;
         private Texture2D _characterSpriteSheet;
         
@@ -66,10 +66,10 @@ namespace StabQuest
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             _font = this.Content.Load<SpriteFont>("MyFont");
-            _wallTexture = this.Content.Load<Texture2D>("Images/wall");
-            _grassTexture = this.Content.Load<Texture2D>("Images/grass");
-            _playerTexture = this.Content.Load<Texture2D>("Images/character");
-            _doorTexture = this.Content.Load<Texture2D>("Images/door");
+            //_wallTexture = this.Content.Load<Texture2D>("Images/wall");
+            //_grassTexture = this.Content.Load<Texture2D>("Images/grass");
+            //_playerTexture = this.Content.Load<Texture2D>("Images/character");
+            //_doorTexture = this.Content.Load<Texture2D>("Images/door");
             _dungeonTileSet = this.Content.Load<Texture2D>("Images/Dungeon_Tileset");
             _characterSpriteSheet = this.Content.Load<Texture2D>("Images/Dungeon_Character_2");
             // TODO: use this.Content to load your game content here
@@ -84,8 +84,19 @@ namespace StabQuest
                 Exit();
             }
             _hasMoved = false;
-            Vector2 newPosition = _playerPosition;
+           
+            HandlePlayerMovement();
 
+            _camera.Follow(_playerWorldPosition);
+            
+            HandleLevelExiting();
+
+            base.Update(gameTime);
+        }
+
+        private void HandlePlayerMovement()
+        {
+            var newPosition = _playerPosition;
             if (KeyboardHelper.CheckKeyPress(Keys.Up))
             {
                 newPosition = _playerPosition + Direction2D.Get(CardinalDirections.UP);
@@ -116,15 +127,7 @@ namespace StabQuest
                     _playerPosition = newPosition;
                 }
             }
-
             _playerWorldPosition = new Vector2(_playerPosition.X * _tileSize, _playerPosition.Y * _tileSize);
-
-            _camera.Follow(_playerWorldPosition);
-            //HandleCameraTransform();
-
-            HandleLevelExiting();
-
-            base.Update(gameTime);
         }
 
         private void HandleLevelExiting()
