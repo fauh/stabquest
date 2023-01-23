@@ -1,11 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using StabQuest.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static StabQuest.DiceHelper;
+using static StabQuest.Helpers.DiceHelper;
 
 namespace StabQuest
 {
@@ -18,13 +19,15 @@ namespace StabQuest
         private int _tileSize;
         private Vector2 _doorPositionStart;
         private Vector2 _doorPositionEnd;
+        private int _worldscale;
 
-        public SimpleRandomWalkDungeonLevel(int level, Texture2D texture, int tileSize)
+        public SimpleRandomWalkDungeonLevel(int level, Texture2D texture, int tileSize, int worldscale)
         {
             _level = level;
             _texture = texture;
             _tileSize = tileSize;
             _tiles = new HashSet<Tile>();
+            _worldscale = worldscale;
             GenerateTiles(level);
         }
 
@@ -69,7 +72,7 @@ namespace StabQuest
             foreach (var position in positions)
             {
                 var randomSourceRect = new Rectangle((7 + RollDice(4)) * _tileSize, RollDiceZeroIndex(3) * _tileSize, _tileSize, _tileSize);
-                var tile = new Tile(position, randomSourceRect, _tileSize, true);
+                var tile = new Tile(position, randomSourceRect, _tileSize, true, _texture, _worldscale);
                 _tiles.Add(tile);
             }
 
@@ -94,7 +97,7 @@ namespace StabQuest
                             _ => new Rectangle(9 * _tileSize, 8 * _tileSize, _tileSize, _tileSize)
                         }; ;
 
-                        _tiles.Add(new Tile(neighbour, sourceRect, _tileSize, false));
+                        _tiles.Add(new Tile(neighbour, sourceRect, _tileSize, false, _texture, _worldscale));
                     }
                 }
             }

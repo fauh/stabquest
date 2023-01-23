@@ -1,10 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using StabQuest.Helpers;
+using StabQuest.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using static StabQuest.DiceHelper;
+using static StabQuest.Helpers.DiceHelper;
 
 namespace StabQuest
 {
@@ -16,21 +18,22 @@ namespace StabQuest
         private SpriteFont _font;
         private Texture2D _dungeonTileSet;
         private Texture2D _characterSpriteSheet;
-        
+        private Texture2D _buttonTexture;
+
         private List<SimpleRandomWalkDungeonLevel> _dungeonLevels;
         private SimpleRandomWalkDungeonLevel _currentDungeonLevel;
+        private Player _player;
         int _currentLevel;
-        CardinalDirections _playerDirection = CardinalDirections.RIGHT;
 
-        Vector2 _playerPosition = new Vector2(0 ,0);
-        private bool _hasMoved;
         private int _screenHeight;
         private int _screenWidth;
-        private int _worldScale = 1;
-        private int _tileSize = 16;
+
+        public static int TileSize = 16;
+
+        public static int WorldScale = 1;
 
         private Camera _camera;
-        private Vector2 _playerWorldPosition;
+        private Button _exitButton;
 
         public Game1()
         {
@@ -49,11 +52,18 @@ namespace StabQuest
             // TODO: Add your initialization logic here
 
             _dungeonLevels = new List<SimpleRandomWalkDungeonLevel>();
-            _currentDungeonLevel = new SimpleRandomWalkDungeonLevel(_currentLevel, _dungeonTileSet, _tileSize);
-            _playerPosition = _currentDungeonLevel.DoorPositionStart;
-            _camera = new Camera(_tileSize, _screenHeight, _screenWidth);
-            _hasMoved = true;
-            _dungeonLevels.Add(_currentDungeonLevel);            
+            _currentDungeonLevel = new SimpleRandomWalkDungeonLevel(_currentLevel, _dungeonTileSet, TileSize, WorldScale);
+
+            _player = new Player(_currentDungeonLevel.DoorPositionStart, _characterSpriteSheet);
+            _player.CurrentDungeonLevel = _currentDungeonLevel;
+            _camera = new Camera(TileSize, _screenHeight, _screenWidth);
+            _dungeonLevels.Add(_currentDungeonLevel);
+
+            _exitButton = new Button(new Vector2(_player.WorldPosition.X - (_screenWidth / 2) + 10, _player.WorldPosition.Y - (_screenHeight / 2) + _buttonTexture.Height + 5), _buttonTexture, _font) { 
+                Text = "Quit Game"
+            };
+
+            _exitButton.Click += ExitButton_Click;
         }
 
         protected override void LoadContent()
@@ -61,8 +71,9 @@ namespace StabQuest
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             _font = this.Content.Load<SpriteFont>("MyFont");
-            _dungeonTileSet = this.Content.Load<Texture2D>("Images/Dungeon_Tileset");   
+            _dungeonTileSet = this.Content.Load<Texture2D>("Images/Dungeon_Tileset");
             _characterSpriteSheet = this.Content.Load<Texture2D>("Images/Dungeon_Character_2");
+            _buttonTexture = this.Content.Load<Texture2D>("Images/button");
         }
 
         protected override void Update(GameTime gameTime)
@@ -73,53 +84,30 @@ namespace StabQuest
             {
                 Exit();
             }
-            _hasMoved = false;
-           
-            HandlePlayerMovement();
+            _player.Update(gameTime);
+            _camera.Follow(_player.WorldPosition);
 
-            _camera.Follow(_playerWorldPosition);
-            
+            _exitButton.Position = new Vector2(_player.WorldPosition.X - (_screenWidth / 2) + 10, _player.WorldPosition.Y - (_screenHeight / 2) + _buttonTexture.Height + 5);
+            _exitButton.Update(gameTime);
+
+          
             HandleLevelExiting();
 
             base.Update(gameTime);
+       
         }
+    
 
-        private void HandlePlayerMovement()
+        private void ExitButton_Click(object sender, System.EventArgs e)
         {
-            var newPosition = _playerPosition;
-            if (KeyboardHelper.CheckKeyPress(Keys.Up))
-            {
-                newPosition = _playerPosition + Direction2D.Get(CardinalDirections.UP);
-            }
-            if (KeyboardHelper.CheckKeyPress(Keys.Down))
-            {
-                newPosition = _playerPosition + Direction2D.Get(CardinalDirections.DOWN);
-            }
-            if (KeyboardHelper.CheckKeyPress(Keys.Left))
-            {
-                newPosition = _playerPosition + Direction2D.Get(CardinalDirections.LEFT);
-                _playerDirection = CardinalDirections.LEFT;
-            }
-            if (KeyboardHelper.CheckKeyPress(Keys.Right))
-            {
-                newPosition = _playerPosition + Direction2D.Get(CardinalDirections.RIGHT);
-                _playerDirection = CardinalDirections.RIGHT;
-            }
-
-            if (!newPosition.Equals(_playerPosition)) // has actually moved
-            {
-                if (_currentDungeonLevel.Tiles.Any(tile => tile.Position.Equals(newPosition) && tile.Walkable))
-                {
-                    _playerPosition = newPosition;
-                    _hasMoved = true;
-                }
-            }
-            _playerWorldPosition = new Vector2(_playerPosition.X * _tileSize, _playerPosition.Y * _tileSize);
+            Exit();
         }
+
+        
 
         private void HandleLevelExiting()
         {
-            if (_playerPosition.Equals(_currentDungeonLevel.DoorPositionEnd) && _hasMoved)
+            if (_player.Position.Equals(_currentDungeonLevel.DoorPositionEnd) && _player.HasMoved)
             {
                 var next = _currentLevel + 1;
                 var nextLevel = _dungeonLevels.FirstOrDefault(d => d.Level == next);
@@ -127,21 +115,23 @@ namespace StabQuest
                 if (nextLevel != null)
                 {
                     _currentDungeonLevel = nextLevel;
+                    _player.CurrentDungeonLevel = _currentDungeonLevel;
 
                 }
                 else
                 {
-                    nextLevel = new SimpleRandomWalkDungeonLevel(next, _dungeonTileSet, _tileSize);
+                    nextLevel = new SimpleRandomWalkDungeonLevel(next, _dungeonTileSet, TileSize, WorldScale);
                     _currentDungeonLevel = nextLevel;
+                    _player.CurrentDungeonLevel = _currentDungeonLevel;
                     _dungeonLevels.Add(nextLevel);
                 }
 
                 _currentLevel = next;
-                _playerPosition = nextLevel.DoorPositionStart;
-                _hasMoved = false;
+                _player.Position = nextLevel.DoorPositionStart;
+                _player.HasMoved = false;
             }
 
-            if (_playerPosition.Equals(_currentDungeonLevel.DoorPositionStart) && _hasMoved)
+            if (_player.Position.Equals(_currentDungeonLevel.DoorPositionStart) && _player.HasMoved)
             {
                 var prev = _currentLevel - 1;
                 if (_currentLevel < 0)
@@ -155,14 +145,15 @@ namespace StabQuest
                 if (previousLevel != null)
                 {
                     _currentDungeonLevel = previousLevel;
-                    _playerPosition = _currentDungeonLevel.DoorPositionEnd;
-                    _hasMoved = false;
+                    _player.CurrentDungeonLevel = _currentDungeonLevel;
+                    _player.Position = _currentDungeonLevel.DoorPositionEnd;
+                    _player.HasMoved = false;
                 }
                 else
                 {
                     Exit();
                 }
-                _hasMoved = false;
+                _player.HasMoved = false;
 
             }
         }
@@ -176,22 +167,19 @@ namespace StabQuest
             _spriteBatch.Begin(transformMatrix: _camera.Transform);
 
             foreach (var tile in _currentDungeonLevel.Tiles) {
-                _spriteBatch.Draw(_currentDungeonLevel.Texture, tile.WorldPosition, tile.SourceRectangle, Color.White, 0, Vector2.One, scale: _worldScale, SpriteEffects.None, 0);
+                tile.Draw(gameTime, _spriteBatch);
             }
 
-            _spriteBatch.DrawString(_font, $"Current Level: {_currentLevel}", new Vector2(_playerWorldPosition.X-(_screenWidth/2) + 10, _playerWorldPosition.Y - (_screenHeight / 2)+ 10), Color.White);
+            _exitButton.Draw(gameTime, _spriteBatch);
 
-            _spriteBatch.Draw(_currentDungeonLevel.Texture, new Vector2(_tileSize * _currentDungeonLevel.DoorPositionStart.X, _tileSize * _currentDungeonLevel.DoorPositionStart.Y), 
-                new Rectangle(8*_tileSize, 3*_tileSize, _tileSize, _tileSize), Color.Green, 0, Vector2.One, scale: _worldScale, SpriteEffects.None, 0);
-            _spriteBatch.Draw(_currentDungeonLevel.Texture, new Vector2(_tileSize * _currentDungeonLevel.DoorPositionEnd.X, _tileSize * _currentDungeonLevel.DoorPositionEnd.Y), 
-                new Rectangle(8 * _tileSize, 3 * _tileSize, _tileSize, _tileSize), Color.Red, 0, Vector2.One, scale: _worldScale, SpriteEffects.None, 0);
+            _spriteBatch.DrawString(_font, $"Current Level: {_currentLevel}", new Vector2(_player.WorldPosition.X-(_screenWidth/2) + 10, _player.WorldPosition.Y - (_screenHeight / 2)+ 10), Color.White);
 
-            var playerSpriteEffect = SpriteEffects.None;
-            if (_playerDirection.Equals(CardinalDirections.LEFT)) {
-                playerSpriteEffect = SpriteEffects.FlipHorizontally;
-            }
-            _spriteBatch.Draw(_characterSpriteSheet, position: _playerWorldPosition, new Rectangle(3*_tileSize, 0, _tileSize,_tileSize), Color.White, 0, Vector2.One, scale:_worldScale, playerSpriteEffect, 0);
+            _spriteBatch.Draw(_currentDungeonLevel.Texture, new Vector2(TileSize * _currentDungeonLevel.DoorPositionStart.X, TileSize * _currentDungeonLevel.DoorPositionStart.Y), 
+                new Rectangle(8* TileSize, 3* TileSize, TileSize, TileSize), Color.Green, 0, Vector2.One, scale: WorldScale, SpriteEffects.None, 0);
+            _spriteBatch.Draw(_currentDungeonLevel.Texture, new Vector2(TileSize * _currentDungeonLevel.DoorPositionEnd.X, TileSize * _currentDungeonLevel.DoorPositionEnd.Y), 
+                new Rectangle(8 * TileSize, 3 * TileSize, TileSize, TileSize), Color.Red, 0, Vector2.One, scale: WorldScale, SpriteEffects.None, 0);
 
+            _player.Draw(gameTime, _spriteBatch);
 
             _spriteBatch.End();
 

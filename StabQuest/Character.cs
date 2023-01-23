@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using static StabQuest.DiceHelper;
+using static StabQuest.Helpers.DiceHelper;
 
 namespace rpgcombatsim
 {

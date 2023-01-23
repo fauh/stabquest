@@ -6,20 +6,25 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
-using static StabQuest.DiceHelper;
+using static StabQuest.Helpers.DiceHelper;
 
-namespace StabQuest
+namespace StabQuest.Helpers
 {
 
-    public static class Direction2D {
+    public static class Direction2D
+    {
 
         private static List<Vector2> _cardinalDirections = new List<Vector2>() { new Vector2(0, 1), new Vector2(1, 0), new Vector2(0, -1), new Vector2(-1, 0) };
-        private static List<Vector2> _diagonalDirections = new List<Vector2>() { new Vector2(-1, 1), new Vector2(1,1), new Vector2(-1,-1), new Vector2(1,-1)};
+        private static List<Vector2> _diagonalDirections = new List<Vector2>() { new Vector2(-1, 1), new Vector2(1, 1), new Vector2(-1, -1), new Vector2(1, -1) };
         public static List<Vector2> CardinalDirections { get { return _cardinalDirections; } }
         public static List<Vector2> DiagonalDirections { get { return _diagonalDirections; } }
-        public static List<Vector2> Directions { get { 
+        public static List<Vector2> Directions
+        {
+            get
+            {
                 var newList = new List<Vector2>();
-                for (int i = 0; i< _cardinalDirections.Count; i++) {
+                for (int i = 0; i < _cardinalDirections.Count; i++)
+                {
                     newList.Add(_cardinalDirections[i]);
                     newList.Add(_diagonalDirections[i]);
                 }
@@ -27,7 +32,8 @@ namespace StabQuest
             }
         }
 
-        public static Vector2 Get(CardinalDirections direction) {
+        public static Vector2 Get(CardinalDirections direction)
+        {
             return _cardinalDirections.ElementAt((int)direction);
         }
 
@@ -36,13 +42,15 @@ namespace StabQuest
             return _diagonalDirections.ElementAt((int)direction);
         }
 
-        public static Vector2 GetDiagonalDirection(int index) {
+        public static Vector2 GetDiagonalDirection(int index)
+        {
             return _diagonalDirections.ElementAt(index);
         }
 
 
-        public static Vector2 GetRandomCardinalDirection() {
-            return GetCardinalDirection(DiceHelper.RollDiceZeroIndex(4));
+        public static Vector2 GetRandomCardinalDirection()
+        {
+            return GetCardinalDirection(RollDiceZeroIndex(4));
         }
 
         public static Vector2 GetCardinalDirection(int index)
@@ -53,11 +61,12 @@ namespace StabQuest
 
         public static Vector2 GetRandomDiagonalDirection()
         {
-            return GetDiagonalDirection(DiceHelper.RollDiceZeroIndex(4));
+            return GetDiagonalDirection(RollDiceZeroIndex(4));
         }
     }
 
-    public enum CardinalDirections { 
+    public enum CardinalDirections
+    {
         DOWN, RIGHT, UP, LEFT
     }
 
@@ -69,13 +78,15 @@ namespace StabQuest
     public static class DungeonHelper
     {
 
-        public static HashSet<Vector2> GetRandomWalkDungeon(Vector2 startPosition, int iterations, int walkLength) {
+        public static HashSet<Vector2> GetRandomWalkDungeon(Vector2 startPosition, int iterations, int walkLength)
+        {
 
             var currentDungeon = new HashSet<Vector2>();
 
             var currentPosition = startPosition;
 
-            for (int i = 0; i < iterations; i++) {
+            for (int i = 0; i < iterations; i++)
+            {
                 var path = SimpleRandomWalk(currentPosition, walkLength);
                 currentDungeon.UnionWith(path);
 
@@ -84,7 +95,7 @@ namespace StabQuest
                     1 => path.ElementAt(RollDiceZeroIndex(path.Count())),
                     2 => currentDungeon.ElementAt(RollDiceZeroIndex(currentDungeon.Count())),
                     3 => path.ElementAt(0),
-                    4 => path.ElementAt(path.Count()-1),
+                    4 => path.ElementAt(path.Count() - 1),
                     _ => currentPosition
                 };
             }
@@ -93,13 +104,13 @@ namespace StabQuest
         }
 
         public static HashSet<Vector2> SimpleRandomWalk(Vector2 startPosition, int walkLength)
-        { 
+        {
             var path = new HashSet<Vector2>();
 
             path.Add(startPosition);
 
             var previousPosition = startPosition;
-            for(int i = 0; i < walkLength; i++)
+            for (int i = 0; i < walkLength; i++)
             {
                 var newPosition = previousPosition + Direction2D.GetRandomCardinalDirection();
                 path.Add(newPosition);
