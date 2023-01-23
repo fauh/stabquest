@@ -13,7 +13,6 @@ namespace StabQuest
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-
         private SpriteFont _font;
         private Texture2D _dungeonTileSet;
         private Texture2D _characterSpriteSheet;
@@ -91,24 +90,20 @@ namespace StabQuest
             if (KeyboardHelper.CheckKeyPress(Keys.Up))
             {
                 newPosition = _playerPosition + Direction2D.Get(CardinalDirections.UP);
-                _hasMoved = true;
             }
             if (KeyboardHelper.CheckKeyPress(Keys.Down))
             {
                 newPosition = _playerPosition + Direction2D.Get(CardinalDirections.DOWN);
-                _hasMoved = true;
             }
             if (KeyboardHelper.CheckKeyPress(Keys.Left))
             {
                 newPosition = _playerPosition + Direction2D.Get(CardinalDirections.LEFT);
                 _playerDirection = CardinalDirections.LEFT;
-                _hasMoved = true;
             }
             if (KeyboardHelper.CheckKeyPress(Keys.Right))
             {
                 newPosition = _playerPosition + Direction2D.Get(CardinalDirections.RIGHT);
                 _playerDirection = CardinalDirections.RIGHT;
-                _hasMoved = true;
             }
 
             if (!newPosition.Equals(_playerPosition)) // has actually moved
@@ -116,6 +111,7 @@ namespace StabQuest
                 if (_currentDungeonLevel.Tiles.Any(tile => tile.Position.Equals(newPosition) && tile.Walkable))
                 {
                     _playerPosition = newPosition;
+                    _hasMoved = true;
                 }
             }
             _playerWorldPosition = new Vector2(_playerPosition.X * _tileSize, _playerPosition.Y * _tileSize);
@@ -177,7 +173,6 @@ namespace StabQuest
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            //_spriteBatch.Begin(transformMatrix: _cameraTransform);
             _spriteBatch.Begin(transformMatrix: _camera.Transform);
 
             foreach (var tile in _currentDungeonLevel.Tiles) {
