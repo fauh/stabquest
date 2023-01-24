@@ -19,8 +19,6 @@ namespace StabQuest
         private CardinalDirections _direction;
         private bool _hasMoved;
 
-
-
         public Player(Vector2 startPosition, Texture2D texture) {
             _position = startPosition;
             _texture = texture;
@@ -40,7 +38,7 @@ namespace StabQuest
             }
         }
 
-        public Vector2 WorldPosition { get { return new Vector2(this.Position.X * Game1.TileSize, this.Position.Y * Game1.TileSize); ; } }
+        public Vector2 WorldPosition { get { return new Vector2(this.Position.X * Game1.TILESIZE, this.Position.Y * Game1.TILESIZE); ; } }
 
         public CardinalDirections Direction { get => _direction; set => _direction = value; }
         public bool HasMoved { get => _hasMoved; set => _hasMoved = value; }
@@ -59,7 +57,7 @@ namespace StabQuest
             {
                 playerSpriteEffect = SpriteEffects.FlipHorizontally;
             }
-            spriteBatch.Draw(_texture, position: WorldPosition, new Rectangle(3 * Game1.TileSize, 0, Game1.TileSize, Game1.TileSize), Color.White, 0, Vector2.One, scale: Game1.WorldScale, playerSpriteEffect, 0);
+            spriteBatch.Draw(_texture, position: WorldPosition, new Rectangle(3 * Game1.TILESIZE, 0, Game1.TILESIZE, Game1.TILESIZE), Color.White, 0, Vector2.One, scale: Game1.WORLDSCALE, playerSpriteEffect, 0);
 
         }
 

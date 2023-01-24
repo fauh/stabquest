@@ -17,15 +17,19 @@ namespace StabQuest.UI
         private SpriteFont _font;
         private bool _isHovering;
         private Texture2D _texture;
-
         private Vector2 _position;
 
 
         public event EventHandler Click;
         public bool Clicked { get; private set; }
-        public Vector2 Position { get => _position; set => _position = value; }
+        public Vector2 Position { 
+            get => _position; 
+            set => _position = value;
+        }
 
-        public Rectangle Rectangle{ get 
+        public Rectangle Rectangle
+        { 
+            get 
             {
                 return new Rectangle((int)_position.X, (int)_position.Y, _texture.Width, _texture.Height);
             } 
