@@ -6,63 +6,56 @@ using StabQuest.Helpers;
 using StabQuest.UI;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StabQuest
 {
-
-  
-    public class MenuState : GameState
+    public class PauseMenuState : GameState
     {
-        private List<GameComponent> _components;
-        private GraphicsDevice _graphicsDevice;
+        List<GameComponent> _components;
         private SpriteFont _font;
 
-        public MenuState(ContentManager content, GraphicsDevice graphicsDevice, Game1 game) : base(content, graphicsDevice, game)
+        public PauseMenuState(ContentManager content, GraphicsDevice graphicsDevice, Game1 game) : base(content, graphicsDevice, game)
         {
-            _graphicsDevice = graphicsDevice;
             var buttonTexture = content.Load<Texture2D>("Images/button");
             _font = content.Load<SpriteFont>("MyFont");
-            var newGameButton = new Button(new Vector2(300, 300), buttonTexture, _font)
+            var mainMenuButton = new Button(new Vector2(300, 300), buttonTexture, _font)
             {
-                Text = "New Game"
+                Text = "Return to Main Menu"
             };
 
-            newGameButton.Click += NewGameButton_Click;
-
-            var quitButton = new Button(new Vector2(300, 400), buttonTexture, _font)
+            var returnButton = new Button(new Vector2(300, 200), buttonTexture, _font)
             {
-                Text = "Quit Game"
+                Text = "Return to Game"
             };
 
-            quitButton.Click += ExitGameButton_Click;
+            mainMenuButton.Click += MainMenuButton_Click;
+
+            returnButton.Click += ReturnButton_Click;
 
             _components = new List<GameComponent>() {
-                newGameButton,
-                quitButton
+                mainMenuButton,
+                returnButton
+
             };
         }
 
-        private void ExitGameButton_Click(object sender, EventArgs e)
+        private void MainMenuButton_Click(object sender, EventArgs e)
         {
-            _game.Exit();
+            _game._overWorldState = null;
+            _game.ChangeState(new MainMenuState(_content, _graphicsDevice, _game));
+
         }
 
-        private void NewGameButton_Click(object sender, EventArgs e)
+        private void ReturnButton_Click(object sender, EventArgs e)
         {
-            var overWorld = new OverworldState(_content, _graphicsDevice, _game);
-            _game._overWorldState = overWorld;
-            _game.ChangeState(overWorld);
+            _game.ChangeState(_game._overWorldState);
+
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             _graphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
-
-            spriteBatch.DrawString(_font, $"STABQUEST!", new Vector2(250, 200), Color.White, 0, Vector2.Zero, 2, SpriteEffects.None, 1);
             foreach (var component in _components)
             {
                 component.Draw(gameTime, spriteBatch);
@@ -72,20 +65,23 @@ namespace StabQuest
 
         public override void PostUpdate(GameTime gameTime)
         {
+
         }
+
 
         public override void Update(GameTime gameTime)
         {
-            
             if (KeyboardHelper.CheckKeyPress(Keys.Escape))
             {
                 _game.ChangeState(_game._overWorldState);
             }
 
+
             foreach (var component in _components)
             {
                 component.Update(gameTime);
             }
+
         }
     }
 }

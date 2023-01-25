@@ -2,38 +2,37 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using StabQuest.Helpers;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static StabQuest.Helpers.CardinalDirections;
 
 namespace StabQuest
 {
     public class Player : GameComponent
     {
         private Vector2 _position;
-        private  Texture2D _texture;
+        private Texture2D _texture;
         private SimpleRandomWalkDungeonLevel _currentDungeonLevel;
         private CardinalDirections _direction;
         private bool _hasMoved;
 
-        public Player(Vector2 startPosition, Texture2D texture) {
+        public Player(Vector2 startPosition, Texture2D texture)
+        {
             _position = startPosition;
             _texture = texture;
             _hasMoved = false;
         }
 
         public Vector2 Position { get => _position; set => _position = value; }
-        public SimpleRandomWalkDungeonLevel CurrentDungeonLevel { get => _currentDungeonLevel; set 
-            { 
-                if (value.Equals(_currentDungeonLevel)) 
-                { 
-                    return; 
-                } 
-                else {
-                    _currentDungeonLevel = value; 
+        public SimpleRandomWalkDungeonLevel CurrentDungeonLevel
+        {
+            get => _currentDungeonLevel; set
+            {
+                if (value.Equals(_currentDungeonLevel))
+                {
+                    return;
+                }
+                else
+                {
+                    _currentDungeonLevel = value;
                 }
             }
         }
@@ -46,7 +45,7 @@ namespace StabQuest
         public override void Update(GameTime gameTimel)
         {
             _hasMoved = false;
-           
+
             HandlePlayerMovement();
         }
 

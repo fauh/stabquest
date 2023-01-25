@@ -6,8 +6,6 @@ using StabQuest.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StabQuest
 {
@@ -16,7 +14,6 @@ namespace StabQuest
         private SpriteFont _font;
         private Texture2D _dungeonTileSet;
         private Texture2D _characterSpriteSheet;
-        private GraphicsDevice _graphicsDevice;
 
         private List<SimpleRandomWalkDungeonLevel> _dungeonLevels;
         private SimpleRandomWalkDungeonLevel _currentDungeonLevel;
@@ -27,18 +24,17 @@ namespace StabQuest
 
         public OverworldState(ContentManager content, GraphicsDevice graphicsDevice, Game1 game) : base(content, graphicsDevice, game)
         {
-            _graphicsDevice= graphicsDevice;
             _currentLevel = 0;
             _font = content.Load<SpriteFont>("MyFont");
             _dungeonTileSet = content.Load<Texture2D>("Images/Dungeon_Tileset");
             _characterSpriteSheet = content.Load<Texture2D>("Images/Dungeon_Character_2");
 
             _dungeonLevels = new List<SimpleRandomWalkDungeonLevel>();
-            _currentDungeonLevel = new SimpleRandomWalkDungeonLevel(_currentLevel, _dungeonTileSet, game.TileSize, game.WorldScale);
+            _currentDungeonLevel = new SimpleRandomWalkDungeonLevel(_currentLevel, _dungeonTileSet, Game1.TILESIZE, Game1.WORLDSCALE);
 
             _player = new Player(_currentDungeonLevel.DoorPositionStart, _characterSpriteSheet);
             _player.CurrentDungeonLevel = _currentDungeonLevel;
-            _camera = new Camera(game.TileSize, game._screenHeight, game._screenWidth);
+            _camera = new Camera(Game1.TILESIZE, game._screenHeight, game._screenWidth);
             _dungeonLevels.Add(_currentDungeonLevel);
         }
 
@@ -51,7 +47,7 @@ namespace StabQuest
 
             //_exitButton.Draw(gameTime, _spriteBatch);
             var topLeftWithMargin = new Vector2(_player.WorldPosition.X - (_game._screenWidth / 2) + 10, _player.WorldPosition.Y - (_game._screenHeight / 2) + 10);
-           
+
 
             _currentDungeonLevel.Draw(gameTime, spriteBatch);
 
@@ -66,10 +62,10 @@ namespace StabQuest
         }
 
         public override void Update(GameTime gameTime)
-        {       
+        {
             if (KeyboardHelper.CheckKeyPress(Keys.Escape))
             {
-               _game.ChangeState(new MenuState(_content, _graphicsDevice,_game));
+                _game.ChangeState(new PauseMenuState(_content, _graphicsDevice, _game));
             }
 
             _player.Update(gameTime);
@@ -93,7 +89,7 @@ namespace StabQuest
                 }
                 else
                 {
-                    nextLevel = new SimpleRandomWalkDungeonLevel(next, _dungeonTileSet, _game.TileSize, _game.WorldScale);
+                    nextLevel = new SimpleRandomWalkDungeonLevel(next, _dungeonTileSet, Game1.TILESIZE, Game1.WORLDSCALE);
                     _currentDungeonLevel = nextLevel;
                     _player.CurrentDungeonLevel = _currentDungeonLevel;
                     _dungeonLevels.Add(nextLevel);
@@ -109,7 +105,7 @@ namespace StabQuest
                 var prev = _currentLevel - 1;
                 if (_currentLevel < 0)
                 {
-                    _game.ChangeState(new MenuState(_content, _graphicsDevice, _game));
+                    _game.ChangeState(new MainMenuState(_content, _graphicsDevice, _game));
                 }
                 _currentLevel = prev;
 
@@ -124,7 +120,7 @@ namespace StabQuest
                 }
                 else
                 {
-                    _game.ChangeState(new MenuState(_content, _graphicsDevice, _game));
+                    _game.ChangeState(new MainMenuState(_content, _graphicsDevice, _game));
                 }
                 _player.HasMoved = false;
 
