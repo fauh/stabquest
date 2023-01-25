@@ -18,24 +18,24 @@ namespace StabQuest
         {
             var buttonTexture = content.Load<Texture2D>("Images/button");
             _font = content.Load<SpriteFont>("MyFont");
+
             var mainMenuButton = new Button(new Vector2(300, 300), buttonTexture, _font)
             {
                 Text = "Return to Main Menu"
             };
+
+            mainMenuButton.Click += MainMenuButton_Click;
 
             var returnButton = new Button(new Vector2(300, 200), buttonTexture, _font)
             {
                 Text = "Return to Game"
             };
 
-            mainMenuButton.Click += MainMenuButton_Click;
-
             returnButton.Click += ReturnButton_Click;
 
             _components = new List<GameComponent>() {
                 mainMenuButton,
                 returnButton
-
             };
         }
 
@@ -43,13 +43,11 @@ namespace StabQuest
         {
             _game._overWorldState = null;
             _game.ChangeState(new MainMenuState(_content, _graphicsDevice, _game));
-
         }
 
         private void ReturnButton_Click(object sender, EventArgs e)
         {
             _game.ChangeState(_game._overWorldState);
-
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -64,9 +62,7 @@ namespace StabQuest
         }
 
         public override void PostUpdate(GameTime gameTime)
-        {
-
-        }
+        { }
 
 
         public override void Update(GameTime gameTime)
@@ -75,7 +71,6 @@ namespace StabQuest
             {
                 _game.ChangeState(_game._overWorldState);
             }
-
 
             foreach (var component in _components)
             {

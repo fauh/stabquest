@@ -45,13 +45,10 @@ namespace StabQuest
 
             spriteBatch.Begin(transformMatrix: _camera.Transform);
 
-            //_exitButton.Draw(gameTime, _spriteBatch);
-            var topLeftWithMargin = new Vector2(_player.WorldPosition.X - (_game._screenWidth / 2) + 10, _player.WorldPosition.Y - (_game._screenHeight / 2) + 10);
-
-
             _currentDungeonLevel.Draw(gameTime, spriteBatch);
-
             _player.Draw(gameTime, spriteBatch);
+
+            var topLeftWithMargin = new Vector2(_player.WorldPosition.X - (_game._screenWidth / 2) + 10, _player.WorldPosition.Y - (_game._screenHeight / 2) + 10);
             spriteBatch.DrawString(_font, $"Current Level: {_currentLevel}", topLeftWithMargin, Color.White);
             spriteBatch.End();
         }
@@ -85,7 +82,6 @@ namespace StabQuest
                 {
                     _currentDungeonLevel = nextLevel;
                     _player.CurrentDungeonLevel = _currentDungeonLevel;
-
                 }
                 else
                 {

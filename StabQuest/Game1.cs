@@ -20,10 +20,6 @@ namespace StabQuest
         public static int TILESIZE = 16;
         public static int WORLDSCALE = 1;
 
-        //public int TileSize = TILESIZE;
-
-        //public int WorldScale = WORLDSCALE;
-
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
