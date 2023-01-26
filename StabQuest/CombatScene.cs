@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static StabQuest.DiceHelper;
+using static StabQuest.Helpers.DiceHelper;
 
 namespace rpgcombatsim
 {
