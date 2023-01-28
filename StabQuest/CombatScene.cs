@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-<<<<<<< Updated upstream
-=======
-using StabQuest.Legacy_CombatSim;
 using static StabQuest.Helpers.DiceHelper;
->>>>>>> Stashed changes
 
 namespace rpgcombatsim
 {

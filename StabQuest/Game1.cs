@@ -1,8 +1,6 @@
-﻿<<<<<<< Updated upstream
-=======
-using StabQuest.GameStates;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using StabQuest.Helpers;
->>>>>>> Stashed changes
 
 namespace StabQuest
 {
