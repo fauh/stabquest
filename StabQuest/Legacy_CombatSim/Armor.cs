@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace rpgcombatsim
+namespace StabQuest.Legacy_CombatSim
 {
-    public class Armor 
+    public class Armor
     {
         public Armor(string name, int baseArmorValue, Stat stat)
         {

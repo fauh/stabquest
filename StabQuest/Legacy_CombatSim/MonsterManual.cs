@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace rpgcombatsim
+namespace StabQuest.Legacy_CombatSim
 {
     public static class MonsterManual
     {
