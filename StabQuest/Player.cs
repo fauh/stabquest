@@ -1,9 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using StabQuest.DungeonLevels;
-using StabQuest.Helpers;
-using System.Linq;
+﻿using System.Linq;
 
 namespace StabQuest
 {

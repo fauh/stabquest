@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace StabQuest
+namespace StabQuest.Helpers
 {
     public static class DiceHelper
     {
