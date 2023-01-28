@@ -32,7 +32,7 @@ namespace StabQuest
             _dungeonLevels = new List<SimpleRandomWalkDungeonLevel>();
             _currentDungeonLevel = new SimpleRandomWalkDungeonLevel(_currentLevel, _dungeonTileSet, Game1.TILESIZE, Game1.WORLDSCALE);
 
-            _player = new Player(_currentDungeonLevel.DoorPositionStart, _characterSpriteSheet);
+            _player = new Player(_currentDungeonLevel, _characterSpriteSheet);
             _player.CurrentDungeonLevel = _currentDungeonLevel;
             _camera = new Camera(Game1.TILESIZE, game._screenHeight, game._screenWidth);
             _dungeonLevels.Add(_currentDungeonLevel);
