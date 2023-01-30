@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using static StabQuest.Helpers.DiceHelper;
 
-namespace rpgcombatsim
+namespace StabQuest.Legacy_CombatSim
 {
     class CombatScene
     {
@@ -22,11 +22,11 @@ namespace rpgcombatsim
 
         public CombatScene(List<Character> players, List<Character> monsters)
         {
-            this.CurrentTurn = 1;
-            this.Players = players;
-            this.Monsters = monsters;
+            CurrentTurn = 1;
+            Players = players;
+            Monsters = monsters;
             CurrentState = CombatState.ACTIVE;
-            this.Initiative = new SortedList<int, List<Character>>();
+            Initiative = new SortedList<int, List<Character>>();
         }
 
 

@@ -1,8 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using StabQuest.DungeonLevels;
 using StabQuest.Helpers;
 using System.Linq;
+using System.Xml.Linq;
+using Color = Microsoft.Xna.Framework.Color;
 
 namespace StabQuest
 {
@@ -50,7 +53,7 @@ namespace StabQuest
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {
+        {   
             var playerSpriteEffect = SpriteEffects.None;
             if (this.Direction.Equals(CardinalDirections.LEFT))
             {

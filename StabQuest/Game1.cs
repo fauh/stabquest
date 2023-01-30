@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using StabQuest.GameStates;
 using StabQuest.Helpers;
+using System;
 
 namespace StabQuest
 {
@@ -28,6 +30,8 @@ namespace StabQuest
             _screenHeight = _graphics.PreferredBackBufferHeight;
             _screenWidth = _graphics.PreferredBackBufferWidth;
         }
+
+
 
         protected override void Initialize()
         {

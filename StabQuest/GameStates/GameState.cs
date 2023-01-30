@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace StabQuest
+namespace StabQuest.GameStates
 {
     public abstract class GameState
     {
@@ -29,4 +29,4 @@ namespace StabQuest
         }
 
     }
-}   
+}
