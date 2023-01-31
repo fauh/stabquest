@@ -34,8 +34,11 @@ namespace StabQuest.GameStates
             _font = content.Load<SpriteFont>("MyFont");
             _dungeonTileSet = content.Load<Texture2D>("Images/Dungeon_Tileset");
             _characterSpriteSheet = content.Load<Texture2D>("Images/Dungeon_Character_2");
-            _lightMask = content.Load<Texture2D>("Images/lightsource");
+            _lightMask = content.Load<Texture2D>("Images/lightmask");
             _lightEffect = content.Load<Effect>("Effects/lighteffect");
+            _dungeonLevels = new List<SimpleRandomWalkDungeonLevel>();
+            _currentDungeonLevel = new SimpleRandomWalkDungeonLevel(_currentLevel, _dungeonTileSet);
+
             _player = new Player(_currentDungeonLevel.EntryPoint, _characterSpriteSheet);
             _player.CurrentDungeonLevel = _currentDungeonLevel;
             _camera = new Camera(Game1.TILESIZE, game._screenHeight, game._screenWidth);
@@ -47,14 +50,14 @@ namespace StabQuest.GameStates
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            var backgroundColor = new Color(37, 19, 26);
+            //var backgroundColor = new Color(37, 19, 26);
             //_graphicsDevice.Clear(backgroundColor);
 
             _graphicsDevice.SetRenderTarget(lightsTarget);
             _graphicsDevice.Clear(Color.Black);
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, transformMatrix: _camera.Transform);
             //draw light mask where there should be torches etc...
-            spriteBatch.Draw(_lightMask, new Vector2(_player.WorldPosition.X, _player.WorldPosition.Y), Color.Orange);
+            spriteBatch.Draw(_lightMask, new Vector2(_player.WorldPosition.X, _player.WorldPosition.Y), sourceRectangle: null, Color.Wheat, rotation: 0, origin: Vector2.Zero, scale: 2, effects: SpriteEffects.None, layerDepth: 1);
             //spriteBatch.Draw(lightMask, new Vector2(X, Y), Color.White);
 
             //spriteBatch.Begin(transformMatrix: _camera.Transform, blendState: BlendState.AlphaBlend);
@@ -63,30 +66,31 @@ namespace StabQuest.GameStates
             _graphicsDevice.SetRenderTarget(mainTarget);
             _graphicsDevice.Clear(Color.Transparent);
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, transformMatrix: _camera.Transform);
-            var topLeft = new Vector2(_player.WorldPosition.X - _game._screenWidth / 2 , _player.WorldPosition.Y - _game._screenHeight / 2);
-          
+            
 
             _currentDungeonLevel.Draw(gameTime, spriteBatch);
 
-            //var rect = new Texture2D(_graphicsDevice, 1, 1);
-            //rect.SetData(new[] { Color.Black });
-            //spriteBatch.Draw(rect, new Rectangle((int)topLeft.X, (int)topLeft.Y, _game._screenWidth * 2, _game._screenHeight * 2), new Color(0, 0, 0, 150));
-            //spriteBatch.Draw(_lightMask, new Rectangle((int)(_player.WorldPosition.X - (_lightMask.Width / 2)), (int)(_player.WorldPosition.Y - (_lightMask.Height / 2)), _lightMask.Width, _lightMask.Height), Color.Orange);
-            _player.Draw(gameTime, spriteBatch);
-
-            var topLeftWithMargin = new Vector2(topLeft.X + 10, topLeft.Y + 10);
-            spriteBatch.DrawString(_font, $"Current Level: {_currentLevel}", topLeftWithMargin, Color.White);
             spriteBatch.End();
 
             _graphicsDevice.SetRenderTarget(null);
             _graphicsDevice.Clear(Color.Black);
            
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, transformMatrix: _camera.Transform);
 
             _lightEffect.Parameters["lightMask"].SetValue(lightsTarget);
-            _lightEffect.CurrentTechnique.Passes[1].Apply();
+            _lightEffect.CurrentTechnique.Passes[0].Apply();
             spriteBatch.Draw(mainTarget, Vector2.Zero, Color.White);
+
             spriteBatch.End();
+            spriteBatch.Begin(SpriteSortMode.Immediate, transformMatrix: _camera.Transform);
+
+
+            _player.Draw(gameTime, spriteBatch);
+            var topLeft = new Vector2(_player.WorldPosition.X - _game._screenWidth / 2, _player.WorldPosition.Y - _game._screenHeight / 2);
+            var topLeftWithMargin = new Vector2(topLeft.X + 10, topLeft.Y + 10);
+            spriteBatch.DrawString(_font, $"Current Level: {_currentLevel}", topLeftWithMargin, Color.White);
+            spriteBatch.End();
+
         }
 
     
