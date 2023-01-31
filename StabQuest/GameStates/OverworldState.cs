@@ -75,14 +75,14 @@ namespace StabQuest.GameStates
             _graphicsDevice.SetRenderTarget(null);
             _graphicsDevice.Clear(Color.Black);
            
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, transformMatrix: _camera.Transform);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
 
             _lightEffect.Parameters["lightMask"].SetValue(lightsTarget);
             _lightEffect.CurrentTechnique.Passes[0].Apply();
             spriteBatch.Draw(mainTarget, Vector2.Zero, Color.White);
 
             spriteBatch.End();
-            spriteBatch.Begin(SpriteSortMode.Immediate, transformMatrix: _camera.Transform);
+            spriteBatch.Begin(SpriteSortMode.Immediate);
 
 
             
