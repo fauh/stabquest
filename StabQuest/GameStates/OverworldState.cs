@@ -57,7 +57,7 @@ namespace StabQuest.GameStates
             _graphicsDevice.Clear(Color.Black);
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, transformMatrix: _camera.Transform);
             //draw light mask where there should be torches etc...
-            spriteBatch.Draw(_lightMask, new Vector2(_player.WorldPosition.X, _player.WorldPosition.Y), sourceRectangle: null, Color.Wheat, rotation: 0, origin: Vector2.Zero, scale: 2, effects: SpriteEffects.None, layerDepth: 1);
+            spriteBatch.Draw(_lightMask, new Vector2(_player.WorldPosition.X - (_lightMask.Width), _player.WorldPosition.Y-(_lightMask.Height)), sourceRectangle: null, Color.Wheat, rotation: 0, origin: Vector2.Zero, scale: 2, effects: SpriteEffects.None, layerDepth: 1);
             //spriteBatch.Draw(lightMask, new Vector2(X, Y), Color.White);
 
             //spriteBatch.Begin(transformMatrix: _camera.Transform, blendState: BlendState.AlphaBlend);
@@ -66,9 +66,9 @@ namespace StabQuest.GameStates
             _graphicsDevice.SetRenderTarget(mainTarget);
             _graphicsDevice.Clear(Color.Transparent);
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, transformMatrix: _camera.Transform);
-            
 
             _currentDungeonLevel.Draw(gameTime, spriteBatch);
+            _player.Draw(gameTime, spriteBatch);
 
             spriteBatch.End();
 
@@ -85,15 +85,15 @@ namespace StabQuest.GameStates
             spriteBatch.Begin(SpriteSortMode.Immediate, transformMatrix: _camera.Transform);
 
 
-            _player.Draw(gameTime, spriteBatch);
+            
             var topLeft = new Vector2(_player.WorldPosition.X - _game._screenWidth / 2, _player.WorldPosition.Y - _game._screenHeight / 2);
             var topLeftWithMargin = new Vector2(topLeft.X + 10, topLeft.Y + 10);
             spriteBatch.DrawString(_font, $"Current Level: {_currentLevel}", topLeftWithMargin, Color.White);
+            
+            
+
             spriteBatch.End();
-
         }
-
-    
 
         public override void PostUpdate(GameTime gameTime)
         {
