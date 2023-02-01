@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
@@ -23,7 +23,7 @@
     <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Content\Images\" />
+    <Folder Include="Shaders\" />
   </ItemGroup>
   <Target Name="RestoreDotnetTools" BeforeTargets="Restore">
     <Message Text="Restoring dotnet tools" Importance="High" />

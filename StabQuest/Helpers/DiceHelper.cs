@@ -4,7 +4,6 @@ namespace StabQuest.Helpers
 {
     public static class DiceHelper
     {
-
         public static int RollDice(int diceCount, int faceCount)
         {
             var total = 0;
