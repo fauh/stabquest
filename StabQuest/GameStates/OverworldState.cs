@@ -82,7 +82,7 @@ namespace StabQuest.GameStates
             spriteBatch.Draw(mainTarget, Vector2.Zero, Color.White);
 
             spriteBatch.End();
-            spriteBatch.Begin(SpriteSortMode.Immediate);
+            spriteBatch.Begin(SpriteSortMode.Immediate, transformMatrix: _camera.Transform);
 
 
             

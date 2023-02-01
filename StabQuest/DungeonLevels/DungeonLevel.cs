@@ -31,8 +31,7 @@ namespace StabQuest.DungeonLevels
         public Vector2 EntryPoint { get => _entryPoint; }
         public Vector2 ExitPoint { get => _exitPoint; }
 
-        public Vector2 FindEntry()
-        {
+        public Vector2 FindNearbyWalkableTile(Vector2 pos) {
             foreach (var direction in Direction2D.Directions)
             {
                 var tryPos = EntryPoint + direction;
@@ -41,21 +40,17 @@ namespace StabQuest.DungeonLevels
                     return tryPos;
                 }
             }
-            return EntryPoint;
+            return pos;
+        }
+
+        public Vector2 FindEntry()
+        {
+            return FindNearbyWalkableTile(EntryPoint);
         }
 
         public Vector2 FindExit()
         {
-            foreach (var direction in Direction2D.Directions)
-            {
-                var tryPos = ExitPoint + direction;
-                if (Tiles.Any(t => t.Position == tryPos && t.Walkable))
-                {
-                    return tryPos;
-                }
-            }
-
-            return ExitPoint;
+            return FindNearbyWalkableTile(ExitPoint);
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
