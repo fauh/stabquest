@@ -81,12 +81,11 @@ namespace StabQuest.GameStates
 
             spriteBatch.End();
 
+            // Draw stuff that shouldn't care about light.
             spriteBatch.Begin(SpriteSortMode.Immediate);
             var topLeft = new Vector2(_player.WorldPosition.X - _game._screenWidth / 2, _player.WorldPosition.Y - _game._screenHeight / 2);
             var topLeftWithMargin = new Vector2(topLeft.X + 10, topLeft.Y + 10);
             spriteBatch.DrawString(_font, $"Current Level: {_currentLevel}", topLeftWithMargin, Color.White);
-
-
 
             spriteBatch.End();
         }
