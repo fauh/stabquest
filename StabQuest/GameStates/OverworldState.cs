@@ -50,23 +50,20 @@ namespace StabQuest.GameStates
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            //var backgroundColor = new Color(37, 19, 26);
-            //_graphicsDevice.Clear(backgroundColor);
-
             _graphicsDevice.SetRenderTarget(lightsTarget);
             _graphicsDevice.Clear(Color.Black);
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, transformMatrix: _camera.Transform);
-            //draw light mask where there should be torches etc...
-            spriteBatch.Draw(_lightMask, new Vector2(_player.WorldPosition.X - (_lightMask.Width), _player.WorldPosition.Y-(_lightMask.Height)), sourceRectangle: null, Color.Wheat, rotation: 0, origin: Vector2.Zero, scale: 2, effects: SpriteEffects.None, layerDepth: 1);
-            //spriteBatch.Draw(lightMask, new Vector2(X, Y), Color.White);
 
-            //spriteBatch.Begin(transformMatrix: _camera.Transform, blendState: BlendState.AlphaBlend);
+            //draw light mask where there should be torches etc...
+            spriteBatch.Draw(_lightMask, new Vector2(_player.WorldPosition.X - (_lightMask.Width), _player.WorldPosition.Y - (_lightMask.Height)), sourceRectangle: null, Color.Wheat, rotation: 0, origin: Vector2.Zero, scale: 2, effects: SpriteEffects.None, layerDepth: 1);
+
             spriteBatch.End();
 
             _graphicsDevice.SetRenderTarget(mainTarget);
             _graphicsDevice.Clear(Color.Transparent);
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, transformMatrix: _camera.Transform);
 
+            // draw everything that should be lit by lights.
             _currentDungeonLevel.Draw(gameTime, spriteBatch);
             _player.Draw(gameTime, spriteBatch);
 
@@ -74,23 +71,22 @@ namespace StabQuest.GameStates
 
             _graphicsDevice.SetRenderTarget(null);
             _graphicsDevice.Clear(Color.Black);
-           
+
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
 
             _lightEffect.Parameters["lightMask"].SetValue(lightsTarget);
             _lightEffect.CurrentTechnique.Passes[0].Apply();
             spriteBatch.Draw(mainTarget, Vector2.Zero, Color.White);
 
+
             spriteBatch.End();
+
+            // draw everything that doesnt care about light
             spriteBatch.Begin(SpriteSortMode.Immediate, transformMatrix: _camera.Transform);
 
-
-            
             var topLeft = new Vector2(_player.WorldPosition.X - _game._screenWidth / 2, _player.WorldPosition.Y - _game._screenHeight / 2);
             var topLeftWithMargin = new Vector2(topLeft.X + 10, topLeft.Y + 10);
             spriteBatch.DrawString(_font, $"Current Level: {_currentLevel}", topLeftWithMargin, Color.White);
-            
-            
 
             spriteBatch.End();
         }
