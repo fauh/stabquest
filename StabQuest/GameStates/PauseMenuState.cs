@@ -65,18 +65,23 @@ namespace StabQuest.GameStates
                 component.Draw(gameTime, spriteBatch);
             }
 
-            PrintCharacter(spriteBatch, _player.Characters.First(),10);
+            var xval = 10;
+            foreach (var pc in _player.Characters)
+            {
+                PrintCharacter(spriteBatch, pc, xval);
+                xval += 200;
+            }
 
             spriteBatch.End();
         }
 
         private void PrintCharacter(SpriteBatch spriteBatch, Character pc, int xvalue)
         {
-            var pos = new Vector2(10, xvalue);
+            var pos = new Vector2(xvalue, 10);
             spriteBatch.DrawString(_font, $"Player Name: {pc.Name}", pos, Color.White);
             spriteBatch.DrawString(_font, $"Health: {pc.CurrentHealth} / {pc.MaxHealth}", new Vector2(pos.X, pos.Y + 20), Color.White);
-            spriteBatch.DrawString(_font, $"Armor: {pc.Armor?.ToString() ?? "None"}", new Vector2(pos.X, pos.Y + 40), Color.White);
-            spriteBatch.DrawString(_font, $"Weapon: {pc.Weapon?.ToString() ?? "None"}", new Vector2(pos.X, pos.Y + 60), Color.White);
+            spriteBatch.DrawString(_font, $"Armor: {pc.Armor?.Name ?? "None"}", new Vector2(pos.X, pos.Y + 40), Color.White);
+            spriteBatch.DrawString(_font, $"Weapon: {pc.Weapon?.Name ?? "None"}", new Vector2(pos.X, pos.Y + 60), Color.White);
             spriteBatch.DrawString(_font, $"STR: {pc.GetStatValue(Legacy_CombatSim.Stat.STR)}", new Vector2(pos.X, pos.Y + 80), Color.White);
             spriteBatch.DrawString(_font, $"DEX: {pc.GetStatValue(Legacy_CombatSim.Stat.DEX)}", new Vector2(pos.X, pos.Y + 100), Color.White);
             spriteBatch.DrawString(_font, $"CON: {pc.GetStatValue(Legacy_CombatSim.Stat.CON)}", new Vector2(pos.X, pos.Y + 120), Color.White);

@@ -29,7 +29,8 @@ namespace StabQuest
             _hasMoved = false;
             _characters = new List<Character>()
             {
-                new Character("Sven", RollDice(4), RollDice(4), RollDice(4), RollDice(4), RollDice(4), RollDice(4), true)
+                new Character("Sven", RollDice(4), RollDice(4), RollDice(4), RollDice(4), RollDice(4), RollDice(4), true),
+                new Character("Not Sven", RollDice(3), RollDice(3), RollDice(3), RollDice(3), RollDice(6), RollDice(6), true)
             };
         }
 
