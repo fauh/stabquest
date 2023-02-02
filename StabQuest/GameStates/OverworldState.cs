@@ -131,7 +131,7 @@ namespace StabQuest.GameStates
         {
             if (KeyboardHelper.CheckKeyPress(Keys.Escape))
             {
-                _game.ChangeState(new PauseMenuState(_content, _graphicsDevice, _game));
+                _game.ChangeState(new PauseMenuState(_content, _graphicsDevice, _game, _player));
             }
 
             if (KeyboardHelper.CheckKeyPress(Keys.End))
