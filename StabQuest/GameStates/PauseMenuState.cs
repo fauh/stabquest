@@ -13,8 +13,9 @@ namespace StabQuest.GameStates
     {
         List<GameComponent> _components;
         private SpriteFont _font;
+        private Player _player;
 
-        public PauseMenuState(ContentManager content, GraphicsDevice graphicsDevice, Game1 game) : base(content, graphicsDevice, game)
+        public PauseMenuState(ContentManager content, GraphicsDevice graphicsDevice, Game1 game, Player player) : base(content, graphicsDevice, game)
         {
             var buttonTexture = content.Load<Texture2D>("Images/button");
             _font = content.Load<SpriteFont>("MyFont");
@@ -37,6 +38,8 @@ namespace StabQuest.GameStates
                 mainMenuButton,
                 returnButton
             };
+
+            _player = player;
         }
 
         private void MainMenuButton_Click(object sender, EventArgs e)

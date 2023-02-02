@@ -31,8 +31,6 @@ namespace StabQuest
             _screenWidth = _graphics.PreferredBackBufferWidth;
         }
 
-
-
         protected override void Initialize()
         {
             base.Initialize();

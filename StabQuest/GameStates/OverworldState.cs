@@ -6,6 +6,7 @@ using StabQuest.DungeonLevels;
 using StabQuest.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace StabQuest.GameStates
@@ -19,14 +20,18 @@ namespace StabQuest.GameStates
         private List<SimpleRandomWalkDungeonLevel> _dungeonLevels;
         private SimpleRandomWalkDungeonLevel _currentDungeonLevel;
         private Player _player;
-        int _currentLevel;
+        private int _currentLevel;
 
 
         public static Effect _lightEffect;
-        RenderTarget2D lightsTarget;
-        RenderTarget2D mainTarget;
+        RenderTarget2D _lightsTarget;
+        RenderTarget2D _mainTarget;
+
 
         private Camera _camera;
+        private bool _enableCheats = false;
+
+        private int _ticksSinceLastCombat = 0;
 
         public OverworldState(ContentManager content, GraphicsDevice graphicsDevice, Game1 game) : base(content, graphicsDevice, game)
         {
@@ -44,14 +49,50 @@ namespace StabQuest.GameStates
             _camera = new Camera(Game1.TILESIZE, game._screenHeight, game._screenWidth);
             _dungeonLevels.Add(_currentDungeonLevel);
 
-            lightsTarget = new RenderTarget2D(graphicsDevice, graphicsDevice.PresentationParameters.BackBufferWidth, graphicsDevice.PresentationParameters.BackBufferHeight);
-            mainTarget = new RenderTarget2D(graphicsDevice, graphicsDevice.PresentationParameters.BackBufferWidth, graphicsDevice.PresentationParameters.BackBufferHeight);
+            _lightsTarget = new RenderTarget2D(graphicsDevice, graphicsDevice.PresentationParameters.BackBufferWidth, graphicsDevice.PresentationParameters.BackBufferHeight);
+            _mainTarget = new RenderTarget2D(graphicsDevice, graphicsDevice.PresentationParameters.BackBufferWidth, graphicsDevice.PresentationParameters.BackBufferHeight);
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            _graphicsDevice.SetRenderTarget(lightsTarget);
+            if (_enableCheats)
+            {
+                DrawWithoutLightsEnabled(gameTime, spriteBatch);
+            }
+            else
+            {
+                DrawWithLightsEnabled(gameTime, spriteBatch);
+            }
+
+            // draw everything that doesnt care about light
+            spriteBatch.Begin(SpriteSortMode.Immediate, transformMatrix: _camera.Transform);
+            var topLeft = new Vector2(_player.WorldPosition.X - _game._screenWidth / 2, _player.WorldPosition.Y - _game._screenHeight / 2);
+            var topLeftWithMargin = new Vector2(topLeft.X + 10, topLeft.Y + 10);
+            //spriteBatch.DrawString(_font, $"Current Level: {_currentLevel}", topLeftWithMargin, Color.White);
+            //spriteBatch.DrawString(_font, $"ticks: {_ticksSinceLastCombat}", topLeftWithMargin, Color.White);
+            spriteBatch.DrawString(_font, $"Current health: {_player.Characters.First().CurrentHealth}", topLeftWithMargin, Color.White);
+
+
+            spriteBatch.End();
+        }
+
+        private void DrawWithoutLightsEnabled(GameTime gameTime, SpriteBatch spriteBatch)
+        {
             _graphicsDevice.Clear(Color.Black);
+
+            spriteBatch.Begin(SpriteSortMode.Immediate, transformMatrix: _camera.Transform);
+
+            _currentDungeonLevel.Draw(gameTime, spriteBatch);
+            _player.Draw(gameTime, spriteBatch);
+
+            spriteBatch.End();
+        }
+
+        private void DrawWithLightsEnabled(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            _graphicsDevice.SetRenderTarget(_lightsTarget);
+            _graphicsDevice.Clear(Color.Black);
+
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive, transformMatrix: _camera.Transform);
 
             //draw light mask where there should be torches etc...
@@ -59,7 +100,7 @@ namespace StabQuest.GameStates
 
             spriteBatch.End();
 
-            _graphicsDevice.SetRenderTarget(mainTarget);
+            _graphicsDevice.SetRenderTarget(_mainTarget);
             _graphicsDevice.Clear(Color.Transparent);
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, transformMatrix: _camera.Transform);
 
@@ -74,19 +115,9 @@ namespace StabQuest.GameStates
 
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
 
-            _lightEffect.Parameters["lightMask"].SetValue(lightsTarget);
+            _lightEffect.Parameters["lightMask"].SetValue(_lightsTarget);
             _lightEffect.CurrentTechnique.Passes[0].Apply();
-            spriteBatch.Draw(mainTarget, Vector2.Zero, Color.White);
-
-
-            spriteBatch.End();
-
-            // draw everything that doesnt care about light
-            spriteBatch.Begin(SpriteSortMode.Immediate, transformMatrix: _camera.Transform);
-
-            var topLeft = new Vector2(_player.WorldPosition.X - _game._screenWidth / 2, _player.WorldPosition.Y - _game._screenHeight / 2);
-            var topLeftWithMargin = new Vector2(topLeft.X + 10, topLeft.Y + 10);
-            spriteBatch.DrawString(_font, $"Current Level: {_currentLevel}", topLeftWithMargin, Color.White);
+            spriteBatch.Draw(_mainTarget, Vector2.Zero, Color.White);
 
             spriteBatch.End();
         }
@@ -103,15 +134,46 @@ namespace StabQuest.GameStates
                 _game.ChangeState(new PauseMenuState(_content, _graphicsDevice, _game));
             }
 
+            if (KeyboardHelper.CheckKeyPress(Keys.End))
+            {
+                _enableCheats = !_enableCheats;
+            }
+
             _player.Update(gameTime);
             _camera.Follow(_player.WorldPosition);
 
             HandleLevelExiting();
+
+            CheckForAndInitiateCombat();
+
+            CheckHealth();
+        }
+
+        private void CheckHealth()
+        {
+            if (_player.Characters.All(c => c.CurrentHealth <= 0)) { 
+                _game.ChangeState(new MainMenuState(_content, _graphicsDevice, _game)); 
+            }
+        }
+
+        private void CheckForAndInitiateCombat()
+        {
+            // tick up each time the player moves.          
+            if (_player.HasMoved)
+            {
+                _ticksSinceLastCombat++;
+
+                if (DiceHelper.RollDice(200) - _ticksSinceLastCombat <= 0)
+                {
+                    _ticksSinceLastCombat = 0;
+                    _game.ChangeState(new CombatState(_content, _graphicsDevice, _game, _player));
+                }
+            }
         }
 
         private void ChangeLevel(DungeonLevel dungeonLevel)
         {
-
+            //TODO
         }
 
         private void HandleLevelExiting()
