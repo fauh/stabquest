@@ -1,4 +1,4 @@
-﻿namespace StabQuest.Legacy_CombatSim
+﻿namespace StabQuest
 {
 
     public enum Stat

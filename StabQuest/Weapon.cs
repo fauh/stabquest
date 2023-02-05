@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace StabQuest.Legacy_CombatSim
+namespace StabQuest
 {
     public class Weapon
     {

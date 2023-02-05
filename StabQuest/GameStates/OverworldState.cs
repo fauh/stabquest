@@ -68,9 +68,9 @@ namespace StabQuest.GameStates
             spriteBatch.Begin(SpriteSortMode.Immediate, transformMatrix: _camera.Transform);
             var topLeft = new Vector2(_player.WorldPosition.X - _game._screenWidth / 2, _player.WorldPosition.Y - _game._screenHeight / 2);
             var topLeftWithMargin = new Vector2(topLeft.X + 10, topLeft.Y + 10);
-            //spriteBatch.DrawString(_font, $"Current Level: {_currentLevel}", topLeftWithMargin, Color.White);
-            //spriteBatch.DrawString(_font, $"ticks: {_ticksSinceLastCombat}", topLeftWithMargin, Color.White);
-            spriteBatch.DrawString(_font, $"Current health: {_player.Characters.First().CurrentHealth}", topLeftWithMargin, Color.White);
+            // spriteBatch.DrawString(_font, $"Current Level: {_currentLevel}", topLeftWithMargin, Color.White);
+            // spriteBatch.DrawString(_font, $"ticks: {_ticksSinceLastCombat}", topLeftWithMargin, Color.White);
+            // spriteBatch.DrawString(_font, $"Current health: {_player.Characters.First().CurrentHealth}", topLeftWithMargin, Color.White);
 
 
             spriteBatch.End();

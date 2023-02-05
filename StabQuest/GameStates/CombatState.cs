@@ -18,10 +18,8 @@ namespace StabQuest.GameStates
         public CombatState(ContentManager content, GraphicsDevice graphicsDevice, Game1 game, Player player) : base(content, graphicsDevice, game)
         {
             _player = player;
-            var pc = _player.Characters.FirstOrDefault();
-            if (pc != null)
-            {
-                pc.CurrentHealth--;
+            foreach (var pc in _player.Characters) {
+                pc.CurrentHealth = pc.CurrentHealth - 1;
             }
         }
 

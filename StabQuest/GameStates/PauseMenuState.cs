@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
 using StabQuest.Helpers;
-using StabQuest.Legacy_CombatSim;
 using StabQuest.UI;
 using System;
 using System.Collections.Generic;
@@ -68,26 +67,11 @@ namespace StabQuest.GameStates
             var xval = 10;
             foreach (var pc in _player.Characters)
             {
-                PrintCharacter(spriteBatch, pc, xval);
+                pc.PrintCharacter(spriteBatch, pc, xval, _font);
                 xval += 200;
             }
 
             spriteBatch.End();
-        }
-
-        private void PrintCharacter(SpriteBatch spriteBatch, Character pc, int xvalue)
-        {
-            var pos = new Vector2(xvalue, 10);
-            spriteBatch.DrawString(_font, $"Player Name: {pc.Name}", pos, Color.White);
-            spriteBatch.DrawString(_font, $"Health: {pc.CurrentHealth} / {pc.MaxHealth}", new Vector2(pos.X, pos.Y + 20), Color.White);
-            spriteBatch.DrawString(_font, $"Armor: {pc.Armor?.Name ?? "None"}", new Vector2(pos.X, pos.Y + 40), Color.White);
-            spriteBatch.DrawString(_font, $"Weapon: {pc.Weapon?.Name ?? "None"}", new Vector2(pos.X, pos.Y + 60), Color.White);
-            spriteBatch.DrawString(_font, $"STR: {pc.GetStatValue(Legacy_CombatSim.Stat.STR)}", new Vector2(pos.X, pos.Y + 80), Color.White);
-            spriteBatch.DrawString(_font, $"DEX: {pc.GetStatValue(Legacy_CombatSim.Stat.DEX)}", new Vector2(pos.X, pos.Y + 100), Color.White);
-            spriteBatch.DrawString(_font, $"CON: {pc.GetStatValue(Legacy_CombatSim.Stat.CON)}", new Vector2(pos.X, pos.Y + 120), Color.White);
-            spriteBatch.DrawString(_font, $"WIS: {pc.GetStatValue(Legacy_CombatSim.Stat.WIS)}", new Vector2(pos.X, pos.Y + 140), Color.White);
-            spriteBatch.DrawString(_font, $"INT: {pc.GetStatValue(Legacy_CombatSim.Stat.INT)}", new Vector2(pos.X, pos.Y + 160), Color.White);
-            spriteBatch.DrawString(_font, $"CHA: {pc.GetStatValue(Legacy_CombatSim.Stat.CHA)}", new Vector2(pos.X, pos.Y + 180), Color.White);
         }
 
         public override void PostUpdate(GameTime gameTime)

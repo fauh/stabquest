@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using StabQuest.DungeonLevels;
 using StabQuest.Helpers;
-using StabQuest.Legacy_CombatSim;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;

@@ -68,5 +68,10 @@ namespace StabQuest
 
             base.Draw(gameTime);
         }
+
+        public GameState getCurrentState()
+        {
+            return _currentState;
+        }
     }
 }
