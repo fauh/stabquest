@@ -33,6 +33,8 @@ namespace StabQuest.GameStates
 
         private int _ticksSinceLastCombat = 0;
 
+        public int CurrentLevel { get => _currentLevel; private set => _currentLevel = value; }
+
         public OverworldState(ContentManager content, GraphicsDevice graphicsDevice, Game1 game) : base(content, graphicsDevice, game)
         {
             _currentLevel = 0;
@@ -139,6 +141,22 @@ namespace StabQuest.GameStates
                 _enableCheats = !_enableCheats;
             }
 
+            if (_enableCheats) { 
+                
+                if (KeyboardHelper.CheckKeyPress(Keys.L)) {
+                    foreach (var pc in _player.Characters)
+                    {
+                        pc.CurrentHealth = 0;
+                    }
+                }
+                if(KeyboardHelper.CheckKeyPress(Keys.H)) {
+                    foreach (var pc in _player.Characters)
+                    {
+                        pc.CurrentHealth++;
+                    }
+                }
+            }
+
             _player.Update(gameTime);
             _camera.Follow(_player.WorldPosition);
 
@@ -152,7 +170,7 @@ namespace StabQuest.GameStates
         private void CheckHealth()
         {
             if (_player.Characters.All(c => c.CurrentHealth <= 0)) { 
-                _game.ChangeState(new MainMenuState(_content, _graphicsDevice, _game)); 
+                _game.ChangeState(new GameOverState(_content, _graphicsDevice, _game, _player)); 
             }
         }
 

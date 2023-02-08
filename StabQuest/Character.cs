@@ -15,6 +15,7 @@ namespace StabQuest
         /// <param name="name"></param>
         public Character(string name) : this(name, 0, 0, 0, 0, 0, 0, false)
         {
+            IsDead = false;
         }
 
         /// <summary>
@@ -48,7 +49,7 @@ namespace StabQuest
 
             Level = 1;
 
-
+            IsDead= false;
         }
 
         public void Print()
@@ -78,6 +79,8 @@ namespace StabQuest
         public int CurrentExperience { get; set; }
         public int ExperienceForNextLevel { get; set; }
 
+        public bool IsDead { get; set; }
+
         public string Name { get; set; }
 
         int[] Stats { get; set; }
@@ -88,15 +91,18 @@ namespace StabQuest
             get { return _currentHealth; }
             set
             {
-                if (_currentHealth + value >= MaxHealth)
+                _currentHealth = value;
+
+                if (_currentHealth >= MaxHealth)
                 {
                     _currentHealth = MaxHealth;
+                } if (_currentHealth <= 0)
+                {
+                    _currentHealth = 0;
                 }
 
-                if (_currentHealth <= 0)
-                {
-                    CurrentHealth = 0;
-                }
+                IsDead = true;
+                
             }
         }
 

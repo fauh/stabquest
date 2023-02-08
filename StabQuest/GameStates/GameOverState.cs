@@ -14,17 +14,24 @@ namespace StabQuest.GameStates
     {
         private SpriteFont _font;
 
-        public GameOverState(ContentManager content, GraphicsDevice graphicsDevice, Game1 game) : base(content, graphicsDevice, game)
+        private List<GameComponent> _components;
+
+        private Player _player;
+        public GameOverState(ContentManager content, GraphicsDevice graphicsDevice, Game1 game, Player player) : base(content, graphicsDevice, game)
         {
             var buttonTexture = content.Load<Texture2D>("Images/button");
             _font = content.Load<SpriteFont>("MyFont");
-
-            var mainMenuButton = new Button(new Vector2(300, 300), buttonTexture, _font)
+            _player= player;
+            var mainMenuButton = new Button(new Vector2(300, 350), buttonTexture, _font)
             {
-                Text = "Return to Main Menu"
+                Text = "Main Menu"
             };
 
             mainMenuButton.Click += MainMenuButton_Click;
+
+            _components = new List<GameComponent> { 
+                mainMenuButton 
+            };
         }
 
         private void MainMenuButton_Click(object sender, EventArgs e)
@@ -35,7 +42,26 @@ namespace StabQuest.GameStates
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            throw new NotImplementedException();
+            _graphicsDevice.Clear(Color.Black);
+            spriteBatch.Begin();
+            
+            foreach(var component in _components)
+            {
+                component.Draw(gameTime, spriteBatch);
+            }
+
+            spriteBatch.DrawString(_font, $"Game Over!", new Vector2(275, 225), Color.White, 0, Vector2.Zero, 2, SpriteEffects.None, 1);
+
+            var xval = 10;
+            foreach (var pc in _player.Characters)
+            {
+                pc.PrintCharacter(spriteBatch, pc, xval, _font);
+                xval += 200;
+            }
+
+            spriteBatch.DrawString(_font, $"You reached dungeon level {_game._overWorldState.CurrentLevel}", new Vector2(175, 250), Color.White, 0, Vector2.Zero, 2, SpriteEffects.None, 1);
+
+            spriteBatch.End();      
         }
 
         public override void PostUpdate(GameTime gameTime)
@@ -45,7 +71,10 @@ namespace StabQuest.GameStates
 
         public override void Update(GameTime gameTime)
         {
-            throw new NotImplementedException();
+            foreach(var component in _components) 
+            {
+                component.Update(gameTime);    
+            }
         }
     }
 }

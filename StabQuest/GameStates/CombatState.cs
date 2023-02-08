@@ -19,7 +19,7 @@ namespace StabQuest.GameStates
         {
             _player = player;
             foreach (var pc in _player.Characters) {
-                pc.CurrentHealth = pc.CurrentHealth - 1;
+                pc.CurrentHealth--;
             }
         }
 

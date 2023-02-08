@@ -21,18 +21,19 @@ namespace StabQuest.GameStates
         {
             var buttonTexture = content.Load<Texture2D>("Images/button");
             _font = content.Load<SpriteFont>("MyFont");
-
-            var mainMenuButton = new Button(new Vector2(300, 300), buttonTexture, _font)
+                               
+            var returnButton = new Button(new Vector2(325, 225), buttonTexture, _font)
             {
-                Text = "Return to Main Menu"
+                Text = "Return"
             };
+
+            var mainMenuButton = new Button(new Vector2(325, 250), buttonTexture, _font)
+            {
+                Text = "Quit"
+            };
+
 
             mainMenuButton.Click += MainMenuButton_Click;
-
-            var returnButton = new Button(new Vector2(300, 200), buttonTexture, _font)
-            {
-                Text = "Return to Game"
-            };
 
             returnButton.Click += ReturnButton_Click;
 
