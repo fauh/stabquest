@@ -8,6 +8,7 @@ namespace StabQuest
     public class Character
     {
         private int _currentHealth;
+        private int _currentExperience;
 
         /// <summary>
         /// Simplied constructor, sets all stats to 0. IsPlayer = false
@@ -50,6 +51,8 @@ namespace StabQuest
             Level = 1;
 
             IsDead = false;
+
+            CurrentExperience= 0;
         }
 
         public void Print()
@@ -76,8 +79,29 @@ namespace StabQuest
 
         public int Level { get; set; }
 
-        public int CurrentExperience { get; set; }
-        public int ExperienceForNextLevel { get; set; }
+        public int CurrentExperience {
+            get { return _currentExperience; }
+            set {
+                _currentExperience  = value;
+
+                if(_currentExperience >= ExperienceForNextLevel)
+                {
+                    LevelUp();
+                }
+            } 
+        }
+
+        private void LevelUp()
+        {
+            Level++;
+
+            var healthIncrease = GetStatValue(Stat.CON) + RollDice(GetStatValue(Stat.CON));
+
+            MaxHealth += healthIncrease;
+            CurrentHealth += healthIncrease;
+        }
+
+        public int ExperienceForNextLevel => Level * Level * 100 ;
 
         public bool IsDead { get; set; }
 
@@ -85,7 +109,7 @@ namespace StabQuest
 
         int[] Stats { get; set; }
         public bool IsPlayer { get; }
-        public int MaxHealth { get; }
+        public int MaxHealth { get; set; }
         public int CurrentHealth
         {
             get { return _currentHealth; }
@@ -109,7 +133,6 @@ namespace StabQuest
         public Weapon Weapon { get; set; }
 
         public Guid _guid { get; }
-
 
         public int GetStatValue(Stat stat)
         {
@@ -187,15 +210,17 @@ namespace StabQuest
             var pos = new Vector2(xvalue, 10);
            
             spriteBatch.DrawString(font, $"Player Name: {pc.Name}", pos, Color.White);
-            spriteBatch.DrawString(font, $"Health: {pc.CurrentHealth} / {pc.MaxHealth}", new Vector2(pos.X, pos.Y + 20), Color.White);
-            spriteBatch.DrawString(font, $"Armor: {pc.Armor?.Name ?? "None"}", new Vector2(pos.X, pos.Y + 40), Color.White);
-            spriteBatch.DrawString(font, $"Weapon: {pc.Weapon?.Name ?? "None"}", new Vector2(pos.X, pos.Y + 60), Color.White);
-            spriteBatch.DrawString(font, $"STR: {pc.GetStatValue(Stat.STR)}", new Vector2(pos.X, pos.Y + 80), Color.White);
-            spriteBatch.DrawString(font, $"DEX: {pc.GetStatValue(Stat.DEX)}", new Vector2(pos.X, pos.Y + 100), Color.White);
-            spriteBatch.DrawString(font, $"CON: {pc.GetStatValue(Stat.CON)}", new Vector2(pos.X, pos.Y + 120), Color.White);
-            spriteBatch.DrawString(font, $"WIS: {pc.GetStatValue(Stat.WIS)}", new Vector2(pos.X, pos.Y + 140), Color.White);
-            spriteBatch.DrawString(font, $"INT: {pc.GetStatValue(Stat.INT)}", new Vector2(pos.X, pos.Y + 160), Color.White);
-            spriteBatch.DrawString(font, $"CHA: {pc.GetStatValue(Stat.CHA)}", new Vector2(pos.X, pos.Y + 180), Color.White);
+            spriteBatch.DrawString(font, $"Level: {pc.Level}", new Vector2(pos.X, pos.Y + 20), Color.White);
+            spriteBatch.DrawString(font, $"EXP: {pc.CurrentExperience} / {pc.ExperienceForNextLevel}", new Vector2(pos.X, pos.Y + 40), Color.White);
+            spriteBatch.DrawString(font, $"Health: {pc.CurrentHealth} / {pc.MaxHealth}", new Vector2(pos.X, pos.Y + 60), Color.White);
+            spriteBatch.DrawString(font, $"Armor: {pc.Armor?.Name ?? "None"}", new Vector2(pos.X, pos.Y + 80), Color.White);
+            spriteBatch.DrawString(font, $"Weapon: {pc.Weapon?.Name ?? "None"}", new Vector2(pos.X, pos.Y + 100), Color.White);
+            spriteBatch.DrawString(font, $"STR: {pc.GetStatValue(Stat.STR)}", new Vector2(pos.X, pos.Y + 120), Color.White);
+            spriteBatch.DrawString(font, $"DEX: {pc.GetStatValue(Stat.DEX)}", new Vector2(pos.X, pos.Y + 140), Color.White);
+            spriteBatch.DrawString(font, $"CON: {pc.GetStatValue(Stat.CON)}", new Vector2(pos.X, pos.Y + 160), Color.White);
+            spriteBatch.DrawString(font, $"WIS: {pc.GetStatValue(Stat.WIS)}", new Vector2(pos.X, pos.Y + 180), Color.White);
+            spriteBatch.DrawString(font, $"INT: {pc.GetStatValue(Stat.INT)}", new Vector2(pos.X, pos.Y + 200), Color.White);
+            spriteBatch.DrawString(font, $"CHA: {pc.GetStatValue(Stat.CHA)}", new Vector2(pos.X, pos.Y + 220), Color.White);
 
         }
     }

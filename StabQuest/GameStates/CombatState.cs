@@ -20,6 +20,7 @@ namespace StabQuest.GameStates
             _player = player;
             foreach (var pc in _player.Characters) {
                 pc.CurrentHealth--;
+                pc.CurrentExperience += 25;
             }
 
             IsActiveScene = true;
