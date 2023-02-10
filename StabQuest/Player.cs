@@ -3,9 +3,11 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using StabQuest.DungeonLevels;
 using StabQuest.Helpers;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 using Color = Microsoft.Xna.Framework.Color;
+using static StabQuest.Helpers.DiceHelper;
 
 namespace StabQuest
 {
@@ -17,12 +19,21 @@ namespace StabQuest
         private CardinalDirections _direction;
         private bool _hasMoved;
 
+        private List<Character> _characters;
+
         public Player(Vector2 startPosition, Texture2D texture)
         {
             _position = startPosition;
             _texture = texture;
             _hasMoved = false;
+            _characters = new List<Character>()
+            {
+                new Character("Sven", RollDice(4), RollDice(4), RollDice(4), RollDice(4), RollDice(4), RollDice(4), true),
+                new Character("Not Sven", RollDice(3), RollDice(3), RollDice(3), RollDice(3), RollDice(6), RollDice(6), true)
+            };
         }
+
+        public List<Character> Characters { get { return _characters; } }
 
         public Vector2 Position { get => _position; set => _position = value; }
         public SimpleRandomWalkDungeonLevel CurrentDungeonLevel

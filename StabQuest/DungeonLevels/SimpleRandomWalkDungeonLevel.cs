@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using StabQuest.Helpers;
 using System.Linq;
-
+using System.Runtime.InteropServices;
 
 namespace StabQuest.DungeonLevels
 {
@@ -32,7 +32,25 @@ namespace StabQuest.DungeonLevels
                     var neighbour = position + Direction2D.CardinalDirections[i];
                     if (!positions.Contains(neighbour))
                     {
-                        //TODO: Handle corners also
+                        //TODO: Handle corners also I am bored.
+
+
+                        // 0 1 1     ----|
+                        // 0 T 1         |
+                        // 0 0 0         |
+                        // t = "01110000";
+
+
+                        // 1 1 0         |
+                        // 1 T 0         |
+                        // 0 0 0     ----|
+                        // t = 11000001
+
+
+                    //    switch (t) {
+                    //        "01110000":{ }
+
+                    //}
 
                         var sourceRect = i switch
                         {

@@ -19,17 +19,34 @@ namespace StabQuest.Helpers
                 var path = SimpleRandomWalk(currentPosition, walkLength);
                 currentDungeon.UnionWith(path);
 
-                currentPosition = RollDice(4) switch
+                currentPosition = RollDice(6) switch
                 {
-                    1 => path.ElementAt(RollDiceZeroIndex(path.Count())),
-                    2 => currentDungeon.ElementAt(RollDiceZeroIndex(currentDungeon.Count())),
-                    3 => path.ElementAt(0),
-                    4 => path.ElementAt(path.Count() - 1),
+                    1 => PickRandomPositionFromPath(path),
+                    2 => PickRandomPositionFromPath(currentDungeon),
+                    3 => GetPathStartPosition(path),
+                    4 => GetPathEndPosition(path),
+                    5 => GetPathStartPosition(path),
+                    6 => GetPathEndPosition(path),
                     _ => currentPosition
                 };
             }
 
             return currentDungeon;
+        }
+
+        private static Vector2 GetPathEndPosition(HashSet<Vector2> path)
+        {
+            return path.ElementAt(path.Count() - 1);
+        }
+
+        private static Vector2 GetPathStartPosition(HashSet<Vector2> path)
+        {
+            return path.ElementAt(0);
+        }
+
+        private static Vector2 PickRandomPositionFromPath(HashSet<Vector2> path)
+        {
+            return path.ElementAt(RollDiceZeroIndex(path.Count()));
         }
 
         public static HashSet<Vector2> SimpleRandomWalk(Vector2 startPosition, int walkLength)

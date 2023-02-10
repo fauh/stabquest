@@ -18,16 +18,16 @@ namespace StabQuest.GameStates
         {
             var buttonTexture = content.Load<Texture2D>("Images/button");
             _font = content.Load<SpriteFont>("MyFont");
-            var newGameButton = new Button(new Vector2(300, 300), buttonTexture, _font)
+            var newGameButton = new Button(new Vector2(325, 300), buttonTexture, _font)
             {
                 Text = "New Game"
             };
 
             newGameButton.Click += NewGameButton_Click;
 
-            var quitButton = new Button(new Vector2(300, 400), buttonTexture, _font)
+            var quitButton = new Button(new Vector2(325, 325), buttonTexture, _font)
             {
-                Text = "Quit Game"
+                Text = "Quit"
             };
 
             quitButton.Click += ExitGameButton_Click;
@@ -36,6 +36,7 @@ namespace StabQuest.GameStates
                 newGameButton,
                 quitButton
             };
+            IsActiveScene = true;
         }
 
         private void ExitGameButton_Click(object sender, EventArgs e)
@@ -52,10 +53,14 @@ namespace StabQuest.GameStates
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            if (!IsActiveScene)
+            {
+                return;
+            }
             _graphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
 
-            spriteBatch.DrawString(_font, $"STABQUEST!", new Vector2(250, 200), Color.White, 0, Vector2.Zero, 2, SpriteEffects.None, 1);
+            spriteBatch.DrawString(_font, $"STABQUEST!", new Vector2(275, 200), Color.White, 0, Vector2.Zero, 2, SpriteEffects.None, 1);
             foreach (var component in _components)
             {
                 component.Draw(gameTime, spriteBatch);
@@ -69,8 +74,10 @@ namespace StabQuest.GameStates
 
         public override void Update(GameTime gameTime)
         {
-
-
+            if (!IsActiveScene)
+            {
+                return;
+            }
 
             foreach (var component in _components)
             {

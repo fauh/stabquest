@@ -15,6 +15,8 @@ namespace StabQuest.GameStates
         protected GraphicsDevice _graphicsDevice;
         protected Game1 _game;
 
+        public bool IsActiveScene { get; set; }
+
         public abstract void Draw(GameTime gameTime, SpriteBatch spriteBatch);
 
         public abstract void Update(GameTime gameTime);

@@ -1,17 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
 using static StabQuest.Helpers.DiceHelper;
 
-namespace StabQuest.Legacy_CombatSim
+namespace StabQuest
 {
     public class Character
     {
+        private int _currentHealth;
+
         /// <summary>
         /// Simplied constructor, sets all stats to 0. IsPlayer = false
         /// </summary>
         /// <param name="name"></param>
         public Character(string name) : this(name, 0, 0, 0, 0, 0, 0, false)
         {
+            IsDead = false;
         }
 
         /// <summary>
@@ -43,7 +47,9 @@ namespace StabQuest.Legacy_CombatSim
             MaxHealth = 10 + con;
             CurrentHealth = MaxHealth;
 
+            Level = 1;
 
+            IsDead = false;
         }
 
         public void Print()
@@ -70,12 +76,33 @@ namespace StabQuest.Legacy_CombatSim
 
         public int Level { get; set; }
 
+        public int CurrentExperience { get; set; }
+        public int ExperienceForNextLevel { get; set; }
+
+        public bool IsDead { get; set; }
+
         public string Name { get; set; }
 
         int[] Stats { get; set; }
         public bool IsPlayer { get; }
         public int MaxHealth { get; }
-        public int CurrentHealth { get; set; }
+        public int CurrentHealth
+        {
+            get { return _currentHealth; }
+            set
+            {
+                _currentHealth = value;
+
+                if (_currentHealth >= MaxHealth)
+                {
+                    _currentHealth = MaxHealth;
+                } if (_currentHealth <= 0)
+                {
+                    _currentHealth = 0;
+                    IsDead = true;
+                }                
+            }
+        }
 
         public Armor Armor { get; set; }
 
@@ -116,6 +143,7 @@ namespace StabQuest.Legacy_CombatSim
             }
         }
 
+
         public void TakeDamage(int damage)
         {
             if (CurrentHealth > 0)
@@ -152,6 +180,23 @@ namespace StabQuest.Legacy_CombatSim
             {
                 Console.WriteLine($"{Name} is already dead...");
             }
+        }
+
+        public void PrintCharacter(SpriteBatch spriteBatch, Character pc, int xvalue, SpriteFont font)
+        {
+            var pos = new Vector2(xvalue, 10);
+           
+            spriteBatch.DrawString(font, $"Player Name: {pc.Name}", pos, Color.White);
+            spriteBatch.DrawString(font, $"Health: {pc.CurrentHealth} / {pc.MaxHealth}", new Vector2(pos.X, pos.Y + 20), Color.White);
+            spriteBatch.DrawString(font, $"Armor: {pc.Armor?.Name ?? "None"}", new Vector2(pos.X, pos.Y + 40), Color.White);
+            spriteBatch.DrawString(font, $"Weapon: {pc.Weapon?.Name ?? "None"}", new Vector2(pos.X, pos.Y + 60), Color.White);
+            spriteBatch.DrawString(font, $"STR: {pc.GetStatValue(Stat.STR)}", new Vector2(pos.X, pos.Y + 80), Color.White);
+            spriteBatch.DrawString(font, $"DEX: {pc.GetStatValue(Stat.DEX)}", new Vector2(pos.X, pos.Y + 100), Color.White);
+            spriteBatch.DrawString(font, $"CON: {pc.GetStatValue(Stat.CON)}", new Vector2(pos.X, pos.Y + 120), Color.White);
+            spriteBatch.DrawString(font, $"WIS: {pc.GetStatValue(Stat.WIS)}", new Vector2(pos.X, pos.Y + 140), Color.White);
+            spriteBatch.DrawString(font, $"INT: {pc.GetStatValue(Stat.INT)}", new Vector2(pos.X, pos.Y + 160), Color.White);
+            spriteBatch.DrawString(font, $"CHA: {pc.GetStatValue(Stat.CHA)}", new Vector2(pos.X, pos.Y + 180), Color.White);
+
         }
     }
 }

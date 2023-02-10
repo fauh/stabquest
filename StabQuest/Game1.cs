@@ -31,8 +31,6 @@ namespace StabQuest
             _screenWidth = _graphics.PreferredBackBufferWidth;
         }
 
-
-
         protected override void Initialize()
         {
             base.Initialize();
@@ -43,6 +41,7 @@ namespace StabQuest
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             _currentState = new MainMenuState(Content, GraphicsDevice, this);
+            _currentState.IsActiveScene= true;
         }
 
         public void ChangeState(GameState state)
@@ -58,7 +57,9 @@ namespace StabQuest
             if (_nextState != null)
             {
                 _currentState = _nextState;
+                _currentState.IsActiveScene = true;
             }
+
             _currentState.Update(gameTime);
 
             base.Update(gameTime);
@@ -69,6 +70,11 @@ namespace StabQuest
             _currentState.Draw(gameTime, _spriteBatch);
 
             base.Draw(gameTime);
+        }
+
+        public GameState getCurrentState()
+        {
+            return _currentState;
         }
     }
 }
