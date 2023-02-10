@@ -53,6 +53,7 @@ namespace StabQuest.GameStates
 
             _lightsTarget = new RenderTarget2D(graphicsDevice, graphicsDevice.PresentationParameters.BackBufferWidth, graphicsDevice.PresentationParameters.BackBufferHeight);
             _mainTarget = new RenderTarget2D(graphicsDevice, graphicsDevice.PresentationParameters.BackBufferWidth, graphicsDevice.PresentationParameters.BackBufferHeight);
+            IsActiveScene = true;
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -80,6 +81,10 @@ namespace StabQuest.GameStates
 
         private void DrawWithoutLightsEnabled(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            if (!IsActiveScene)
+            {
+                return;
+            }
             _graphicsDevice.Clear(Color.Black);
 
             spriteBatch.Begin(SpriteSortMode.Immediate, transformMatrix: _camera.Transform);
@@ -131,6 +136,11 @@ namespace StabQuest.GameStates
 
         public override void Update(GameTime gameTime)
         {
+            if (!IsActiveScene)
+            {
+                return;
+            }
+
             if (KeyboardHelper.CheckKeyPress(Keys.Escape))
             {
                 _game.ChangeState(new PauseMenuState(_content, _graphicsDevice, _game, _player));
@@ -169,13 +179,21 @@ namespace StabQuest.GameStates
 
         private void CheckHealth()
         {
+            if(!IsActiveScene) {
+                return;
+            }
             if (_player.Characters.All(c => c.CurrentHealth <= 0)) { 
-                _game.ChangeState(new GameOverState(_content, _graphicsDevice, _game, _player)); 
+                _game.ChangeState(new GameOverState(_content, _graphicsDevice, _game, _player));
+                IsActiveScene = false;
             }
         }
 
         private void CheckForAndInitiateCombat()
         {
+            if (!IsActiveScene)
+            {
+                return;
+            }
             // tick up each time the player moves.          
             if (_player.HasMoved)
             {
@@ -185,6 +203,7 @@ namespace StabQuest.GameStates
                 {
                     _ticksSinceLastCombat = 0;
                     _game.ChangeState(new CombatState(_content, _graphicsDevice, _game, _player));
+                    IsActiveScene = false;
                 }
             }
         }
@@ -196,6 +215,10 @@ namespace StabQuest.GameStates
 
         private void HandleLevelExiting()
         {
+            if (!IsActiveScene)
+            {
+                return;
+            }
             if (_player.Position.Equals(_currentDungeonLevel.ExitPoint) && _player.HasMoved)
             {
                 var next = _currentLevel + 1;

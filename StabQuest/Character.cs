@@ -49,7 +49,7 @@ namespace StabQuest
 
             Level = 1;
 
-            IsDead= false;
+            IsDead = false;
         }
 
         public void Print()
@@ -99,10 +99,8 @@ namespace StabQuest
                 } if (_currentHealth <= 0)
                 {
                     _currentHealth = 0;
-                }
-
-                IsDead = true;
-                
+                    IsDead = true;
+                }                
             }
         }
 

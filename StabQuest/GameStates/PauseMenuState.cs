@@ -58,6 +58,10 @@ namespace StabQuest.GameStates
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            if (!IsActiveScene)
+            {
+                return;
+            }
             _graphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
             foreach (var component in _components)
@@ -81,9 +85,14 @@ namespace StabQuest.GameStates
 
         public override void Update(GameTime gameTime)
         {
+            if(!IsActiveScene)
+            {
+                return;
+            }
             if (KeyboardHelper.CheckKeyPress(Keys.Escape))
             {
                 _game.ChangeState(_game._overWorldState);
+                IsActiveScene = false;
             }
 
             foreach (var component in _components)

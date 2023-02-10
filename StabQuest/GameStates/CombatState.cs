@@ -21,10 +21,16 @@ namespace StabQuest.GameStates
             foreach (var pc in _player.Characters) {
                 pc.CurrentHealth--;
             }
+
+            IsActiveScene = true;
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            if (!IsActiveScene)
+            {
+                return;
+            }
             _graphicsDevice.Clear(Color.Red);
         }
 
@@ -35,17 +41,27 @@ namespace StabQuest.GameStates
 
         private void CheckHealth()
         {
-            if (_player.Characters.All(c => c.CurrentHealth <= 0))
+            if (!IsActiveScene)
             {
-                _game.ChangeState(new MainMenuState(_content, _graphicsDevice, _game));
+                return;
+            }
+            if (_player.Characters.All(c => c.IsDead))
+            {
+                _game.ChangeState(new GameOverState(_content, _graphicsDevice, _game, _player));
+                IsActiveScene = false;
             }
         }
 
         public override void Update(GameTime gameTime)
         {
+            if (!IsActiveScene)
+            {
+                return;
+            }
             if (KeyboardHelper.CheckKeyPress(Keys.Escape))
             {
                 _game.ChangeState(_game._overWorldState);
+                IsActiveScene = false;
             }
             CheckHealth();
         }

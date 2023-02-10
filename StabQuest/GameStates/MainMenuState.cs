@@ -36,6 +36,7 @@ namespace StabQuest.GameStates
                 newGameButton,
                 quitButton
             };
+            IsActiveScene = true;
         }
 
         private void ExitGameButton_Click(object sender, EventArgs e)
@@ -52,6 +53,10 @@ namespace StabQuest.GameStates
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            if (!IsActiveScene)
+            {
+                return;
+            }
             _graphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
 
@@ -69,8 +74,10 @@ namespace StabQuest.GameStates
 
         public override void Update(GameTime gameTime)
         {
-
-
+            if (!IsActiveScene)
+            {
+                return;
+            }
 
             foreach (var component in _components)
             {

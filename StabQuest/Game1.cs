@@ -41,6 +41,7 @@ namespace StabQuest
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             _currentState = new MainMenuState(Content, GraphicsDevice, this);
+            _currentState.IsActiveScene= true;
         }
 
         public void ChangeState(GameState state)
@@ -56,7 +57,9 @@ namespace StabQuest
             if (_nextState != null)
             {
                 _currentState = _nextState;
+                _currentState.IsActiveScene = true;
             }
+
             _currentState.Update(gameTime);
 
             base.Update(gameTime);

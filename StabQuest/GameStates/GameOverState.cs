@@ -32,16 +32,24 @@ namespace StabQuest.GameStates
             _components = new List<GameComponent> { 
                 mainMenuButton 
             };
+
+            IsActiveScene = true;
         }
 
         private void MainMenuButton_Click(object sender, EventArgs e)
-        {
-            _game._overWorldState = null;
+        {            
             _game.ChangeState(new MainMenuState(_content, _graphicsDevice, _game));
+            IsActiveScene= false;
+            _game._overWorldState = null;
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            if(!IsActiveScene)
+            {
+                return;
+            }
+
             _graphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
             
