@@ -33,6 +33,18 @@ namespace StabQuest
             };
         }
 
+
+        public Player()
+        {
+        }
+
+        public Player(Texture2D characterSpriteSheet)
+        {
+            _texture = characterSpriteSheet;
+            _hasMoved = false;
+            _characters = new List<Character>();
+        }
+
         public List<Character> Characters { get { return _characters; } }
 
         public Vector2 Position { get => _position; set => _position = value; }

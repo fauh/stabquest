@@ -46,9 +46,7 @@ namespace StabQuest.GameStates
 
         private void NewGameButton_Click(object sender, EventArgs e)
         {
-            var overWorld = new OverworldState(_content, _graphicsDevice, _game);
-            _game._overWorldState = overWorld;
-            _game.ChangeState(overWorld);
+            _game.ChangeState(new CharacterCreateState(_content, _graphicsDevice, _game));
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)

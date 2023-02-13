@@ -14,9 +14,8 @@ namespace StabQuest
         /// Simplied constructor, sets all stats to 0. IsPlayer = false
         /// </summary>
         /// <param name="name"></param>
-        public Character(string name) : this(name, 0, 0, 0, 0, 0, 0, false)
+        public Character(string name) : this(name, RollDice(4), RollDice(4), RollDice(4), RollDice(4), RollDice(4), RollDice(4), false)
         {
-            IsDead = false;
         }
 
         /// <summary>
