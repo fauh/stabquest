@@ -255,7 +255,9 @@ namespace StabQuest.GameStates
                 component.Draw(gameTime, spriteBatch);
             }
 
-            spriteBatch.DrawString(_font, $"Unspent: {_character.UnspentSkillPoints}", new Vector2(200, 50), Color.White);
+            spriteBatch.DrawString(_font, $"You have reached Level {_character.Level}", new Vector2(200, 20), Color.White);
+
+            spriteBatch.DrawString(_font, $"Unspent points: {_character.UnspentSkillPoints}", new Vector2(200, 50), Color.White);
 
             spriteBatch.DrawString(_font, $"STR: { _dirtyStatArray[(int)Stat.STR] }", new Vector2(200, 100), Color.White);
             spriteBatch.DrawString(_font, $"DEX: { _dirtyStatArray[(int)Stat.DEX] }", new Vector2(200, 150), Color.White);
