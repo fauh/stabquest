@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using StabQuest.GameStates;
 using System;
 using static StabQuest.Helpers.DiceHelper;
 
@@ -9,7 +10,6 @@ namespace StabQuest
     {
         private int _currentHealth;
         private int _currentExperience;
-
         /// <summary>
         /// Simplied constructor, sets all stats to 0. IsPlayer = false
         /// </summary>
@@ -34,7 +34,6 @@ namespace StabQuest
             Name = name;
             Stats = new int[6];
 
-
             Stats[(int)Stat.STR] = str;
             Stats[(int)Stat.DEX] = dex;
             Stats[(int)Stat.CON] = con;
@@ -47,7 +46,8 @@ namespace StabQuest
             MaxHealth = 10 + con;
             CurrentHealth = MaxHealth;
 
-            Level = 1;
+            Level = 0;
+            ShouldLevelUp = true;
 
             IsDead = false;
 
@@ -90,14 +90,11 @@ namespace StabQuest
             } 
         }
 
-        private void LevelUp()
+        public void LevelUp()
         {
             Level++;
-
-            var healthIncrease = GetStatValue(Stat.CON) + RollDice(GetStatValue(Stat.CON));
-
-            MaxHealth += healthIncrease;
-            CurrentHealth += healthIncrease;
+            UnspentSkillPoints += (int)((10 + Level) / 10) + 1;
+            ShouldLevelUp = true;
         }
 
         public int ExperienceForNextLevel => Level * Level * 100 ;
@@ -106,7 +103,7 @@ namespace StabQuest
 
         public string Name { get; set; }
 
-        int[] Stats { get; set; }
+        public int[] Stats { get; set; }
         public bool IsPlayer { get; }
         public int MaxHealth { get; set; }
         public int CurrentHealth
@@ -132,6 +129,8 @@ namespace StabQuest
         public Weapon Weapon { get; set; }
 
         public Guid _guid { get; }
+        public int UnspentSkillPoints { get; internal set; }
+        public bool ShouldLevelUp { get; set; }
 
         public int GetStatValue(Stat stat)
         {
@@ -145,6 +144,8 @@ namespace StabQuest
 
         }
 
+
+      
         public void MakeAttack(Character other)
         {
             var weaponDamage = RollDice(Weapon.DiceCount, Weapon.FaceCount) + GetStatValue(Weapon.Modifier);

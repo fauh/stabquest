@@ -173,8 +173,25 @@ namespace StabQuest.GameStates
             HandleLevelExiting();
 
             CheckForAndInitiateCombat();
+            CheckForAndExecuteLevelUp();
 
             CheckHealth();
+        }
+
+        private void CheckForAndExecuteLevelUp()
+        {
+            if (!IsActiveScene) {
+                return;
+            }
+            if (_player.Characters.Any(c => c.ShouldLevelUp))
+            {
+                foreach (var character in _player.Characters)
+                {
+                    _game.ChangeState(new LevelUpState(_content, _graphicsDevice, _game, character));
+                    IsActiveScene = false;
+                    break;
+                }
+            }
         }
 
         private void CheckHealth()
