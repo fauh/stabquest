@@ -88,7 +88,7 @@ public sealed class SoundService
         // Loop the 3 stepping sounds
         if (effect == SoundEffects.Step)
         {
-            effectToPlay += stepCounter;
+            effectToPlay += _stepCounter;
             _stepCounter = (_stepCounter + 1) % 3;
         }
 
