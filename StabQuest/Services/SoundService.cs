@@ -13,7 +13,7 @@ public sealed class SoundService
     private Song _backgroundSong2;
     private List<SoundEffect> _soundEffects;
     private bool _isBackgroundSong1Playing;
-    private int stepCounter;
+    private int _stepCounter;
 
     static SoundService() { }
 
