@@ -89,7 +89,7 @@ public sealed class SoundService
         if (effect == SoundEffects.Step)
         {
             effectToPlay += stepCounter;
-            stepCounter = (stepCounter + 1) % 3;
+            _stepCounter = (_stepCounter + 1) % 3;
         }
 
         return effectToPlay;
