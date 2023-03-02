@@ -27,7 +27,11 @@ namespace StabQuest.GameStates
             _character = character;
 
             ResetNewStats();
+            InitiateUIElements(boxTexture, buttonTexture);
+        }
 
+        private void InitiateUIElements(Texture2D boxTexture, Texture2D buttonTexture)
+        {
             var str_up = new Button(new Vector2(50, 100), boxTexture, _font)
             {
                 Text = "+"
@@ -91,7 +95,7 @@ namespace StabQuest.GameStates
             {
                 Text = "Reset Stats"
             };
-                        
+
             str_up.Click += STR_UpClick;
             dex_up.Click += DEX_UpClick;
             con_up.Click += CON_UpClick;
