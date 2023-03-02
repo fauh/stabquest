@@ -83,7 +83,7 @@ namespace StabQuest
             set {
                 _currentExperience  = value;
 
-                if(_currentExperience >= ExperienceForNextLevel)
+                while(_currentExperience >= ExperienceForNextLevel)
                 {
                     LevelUp();
                 }
