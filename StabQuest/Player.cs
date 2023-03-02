@@ -31,10 +31,8 @@ namespace StabQuest
             {
                 new Character("Sven", RollDice(4), RollDice(4), RollDice(4), RollDice(4), RollDice(4), RollDice(4), true),
                 new Character("Not Sven", RollDice(3), RollDice(3), RollDice(3), RollDice(3), RollDice(6), RollDice(6), true)
-            };
-            
+            };            
         }
-
 
         public Player()
         {
