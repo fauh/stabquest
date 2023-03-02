@@ -28,6 +28,8 @@ public sealed class SoundService
     }
 
     public ContentManager Content { get; set; }
+    public int BackgroundMusicVolumePercentage { get; set; }
+    public int SoundEffectsVolumePercentage { get; set; }
 
     public enum SoundEffects
     {
@@ -53,12 +55,16 @@ public sealed class SoundService
     {
         var effectToPlay = HandleMultiSourceEffects(effect);
 
+        volume = volume * (SoundEffectsVolumeFactor / 100);
+
         _soundEffects[effectToPlay].Play(volume, pitch, pan);
     }
 
     public void PlaySoundEffectInstance(SoundEffects effect, float volume = 1, float pitch = 0, float pan = 0)
     {
         var effectToPlay = HandleMultiSourceEffects(effect);
+
+        volume = volume * (SoundEffectsVolumeFactor / 100);
 
         var instance = _soundEffects[effectToPlay].CreateInstance();
         instance.Volume = volume;
@@ -69,6 +75,7 @@ public sealed class SoundService
 
     public void PlayBackgroundMusic()
     {
+        MediaPlayer.Volume= 1 * (BackgroundMusicVolumeFactor / 100);
         MediaPlayer.Play(_backgroundSong1);
         _isBackgroundSong1Playing = true;
         MediaPlayer.IsRepeating = true;
