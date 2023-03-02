@@ -19,7 +19,7 @@ namespace StabQuest
         private SimpleRandomWalkDungeonLevel _currentDungeonLevel;
         private CardinalDirections _direction;
         private bool _hasMoved;
-        private SoundService _soundService;
+        private SoundService _soundService = SoundService.Instance;
         private List<Character> _characters;
 
         public Player(Vector2 startPosition, Texture2D texture)
@@ -31,8 +31,18 @@ namespace StabQuest
             {
                 new Character("Sven", RollDice(4), RollDice(4), RollDice(4), RollDice(4), RollDice(4), RollDice(4), true),
                 new Character("Not Sven", RollDice(3), RollDice(3), RollDice(3), RollDice(3), RollDice(6), RollDice(6), true)
-            };
-            _soundService = SoundService.Instance;
+            };            
+        }
+
+        public Player()
+        {
+        }
+
+        public Player(Texture2D characterSpriteSheet)
+        {
+            _texture = characterSpriteSheet;
+            _hasMoved = false;
+            _characters = new List<Character>();
         }
 
         public List<Character> Characters { get { return _characters; } }

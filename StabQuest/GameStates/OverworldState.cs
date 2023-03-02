@@ -34,18 +34,18 @@ namespace StabQuest.GameStates
 
         public int CurrentLevel { get => _currentLevel; private set => _currentLevel = value; }
 
-        public OverworldState(ContentManager content, GraphicsDevice graphicsDevice, Game1 game) : base(content, graphicsDevice, game)
+        public OverworldState(ContentManager content, GraphicsDevice graphicsDevice, Game1 game, Player player) : base(content, graphicsDevice, game)
         {
             _currentLevel = 0;
             _font = content.Load<SpriteFont>("MyFont");
             _dungeonTileSet = content.Load<Texture2D>("Images/Dungeon_Tileset");
-            _characterSpriteSheet = content.Load<Texture2D>("Images/Dungeon_Character_2");
             _lightMask = content.Load<Texture2D>("Images/lightmask");
             _lightEffect = content.Load<Effect>("Effects/lighteffect");
             _dungeonLevels = new List<SimpleRandomWalkDungeonLevel>();
             _currentDungeonLevel = new SimpleRandomWalkDungeonLevel(_currentLevel, _dungeonTileSet);
 
-            _player = new Player(_currentDungeonLevel.EntryPoint, _characterSpriteSheet);
+            _player = player;
+            _player.Position = _currentDungeonLevel.EntryPoint;
             _player.CurrentDungeonLevel = _currentDungeonLevel;
             _camera = new Camera(Game1.TILESIZE, game._screenHeight, game._screenWidth);
             _dungeonLevels.Add(_currentDungeonLevel);
@@ -172,8 +172,25 @@ namespace StabQuest.GameStates
             HandleLevelExiting();
 
             CheckForAndInitiateCombat();
+            CheckForAndExecuteLevelUp();
 
             CheckHealth();
+        }
+
+        private void CheckForAndExecuteLevelUp()
+        {
+            if (!IsActiveScene) {
+                return;
+            }
+            if (_player.Characters.Any(c => c.ShouldLevelUp))
+            {
+                foreach (var character in _player.Characters)
+                {
+                    _game.ChangeState(new LevelUpState(_content, _graphicsDevice, _game, character));
+                    IsActiveScene = false;
+                    break;
+                }
+            }
         }
 
         private void CheckHealth()
