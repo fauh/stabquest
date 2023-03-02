@@ -211,7 +211,7 @@ namespace StabQuest.GameStates
 
         private void StatUp(Stat stat)
         {
-            if (_character.UnspentSkillPoints <= 0)
+            if (_unspent <= 0)
             {
                 // no points left to spend
                 return;
@@ -261,7 +261,7 @@ namespace StabQuest.GameStates
 
             spriteBatch.DrawString(_font, $"You have reached Level {_character.Level}", new Vector2(200, 20), Color.White);
 
-            spriteBatch.DrawString(_font, $"Unspent points: {_character.UnspentSkillPoints}", new Vector2(200, 50), Color.White);
+            spriteBatch.DrawString(_font, $"Unspent points: {_unspent}", new Vector2(200, 50), Color.White);
 
             spriteBatch.DrawString(_font, $"STR: { _dirtyStatArray[(int)Stat.STR] }", new Vector2(200, 100), Color.White);
             spriteBatch.DrawString(_font, $"DEX: { _dirtyStatArray[(int)Stat.DEX] }", new Vector2(200, 150), Color.White);
