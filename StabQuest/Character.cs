@@ -93,7 +93,7 @@ namespace StabQuest
         public void LevelUp()
         {
             Level++;
-            UnspentSkillPoints += (int)((10 + Level) / 10) + 1;
+            UnspentSkillPoints += ((10 + Level) / 10) + 1;
             ShouldLevelUp = true;
         }
 
