@@ -134,3 +134,39 @@
 /processorParam:TextureFormat=Compressed
 /build:MyFont.spritefont
 
+#begin Sounds/Background1.ogg
+/importer:OggImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Sounds/Background1.ogg
+
+#begin Sounds/Background2.ogg
+/importer:OggImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Sounds/Background2.ogg
+
+#begin Sounds/Step1.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/Step1.ogg
+
+#begin Sounds/Step2.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/Step2.ogg
+
+#begin Sounds/Step3.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/Step3.ogg
+
+#begin Sounds/sword sound.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/sword sound.wav
+

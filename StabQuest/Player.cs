@@ -8,6 +8,7 @@ using System.Linq;
 using System.Xml.Linq;
 using Color = Microsoft.Xna.Framework.Color;
 using static StabQuest.Helpers.DiceHelper;
+using StabQuest.Services;
 
 namespace StabQuest
 {
@@ -18,7 +19,7 @@ namespace StabQuest
         private SimpleRandomWalkDungeonLevel _currentDungeonLevel;
         private CardinalDirections _direction;
         private bool _hasMoved;
-
+        private SoundService _soundService;
         private List<Character> _characters;
 
         public Player(Vector2 startPosition, Texture2D texture)
@@ -31,6 +32,7 @@ namespace StabQuest
                 new Character("Sven", RollDice(4), RollDice(4), RollDice(4), RollDice(4), RollDice(4), RollDice(4), true),
                 new Character("Not Sven", RollDice(3), RollDice(3), RollDice(3), RollDice(3), RollDice(6), RollDice(6), true)
             };
+            _soundService = SoundService.Instance;
         }
 
 
@@ -48,6 +50,7 @@ namespace StabQuest
         public List<Character> Characters { get { return _characters; } }
 
         public Vector2 Position { get => _position; set => _position = value; }
+
         public SimpleRandomWalkDungeonLevel CurrentDungeonLevel
         {
             get => _currentDungeonLevel; set
@@ -66,6 +69,7 @@ namespace StabQuest
         public Vector2 WorldPosition { get { return new Vector2(this.Position.X * Game1.TILESIZE, this.Position.Y * Game1.TILESIZE); ; } }
 
         public CardinalDirections Direction { get => _direction; set => _direction = value; }
+
         public bool HasMoved { get => _hasMoved; set => _hasMoved = value; }
 
         public override void Update(GameTime gameTimel)
@@ -113,6 +117,7 @@ namespace StabQuest
                 if (_currentDungeonLevel.Tiles.Any(tile => tile.Position.Equals(newPosition) && tile.Walkable))
                 {
                     _position = newPosition;
+                    _soundService.PlaySoundEffectInstance(SoundService.SoundEffects.Step);
                     _hasMoved = true;
                 }
             }

@@ -2,79 +2,84 @@
 using Microsoft.Xna.Framework.Graphics;
 using StabQuest.GameStates;
 using StabQuest.Helpers;
-using System;
+using StabQuest.Services;
 
-namespace StabQuest
+namespace StabQuest;
+
+public class Game1 : Game
 {
-    public class Game1 : Game
+    private GraphicsDeviceManager _graphics;
+    private SpriteBatch _spriteBatch;
+
+    private GameState _currentState;
+    private GameState _nextState;
+
+    public OverworldState _overWorldState;
+
+    public int _screenHeight;
+    public int _screenWidth;
+
+    public static int TILESIZE = 16;
+    public static int WORLDSCALE = 1;
+
+    private SoundService _soundService;
+
+    public Game1()
     {
-        private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
+        _graphics = new GraphicsDeviceManager(this);
+        Content.RootDirectory = "Content";
+        IsMouseVisible = true;
+        _screenHeight = _graphics.PreferredBackBufferHeight;
+        _screenWidth = _graphics.PreferredBackBufferWidth;
+    }
 
-        private GameState _currentState;
-        private GameState _nextState;
+    protected override void Initialize()
+    {
+        base.Initialize();
+    }
 
-        public OverworldState _overWorldState;
+    protected override void LoadContent()
+    {
+        _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-        public int _screenHeight;
-        public int _screenWidth;
+        _currentState = new MainMenuState(Content, GraphicsDevice, this);
+        _currentState.IsActiveScene = true;
+        
+        _soundService = SoundService.Instance;
+        _soundService.Content = Content;
+        _soundService.LoadSounds();
+        _soundService.PlayBackgroundMusic();
+    }
 
-        public static int TILESIZE = 16;
-        public static int WORLDSCALE = 1;
+    public void ChangeState(GameState state)
+    {
+        _nextState = state;
+    }
 
-        public Game1()
+    protected override void Update(GameTime gameTime)
+    {
+        KeyboardHelper.GetState();
+
+        if (_nextState != null)
         {
-            _graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
-            IsMouseVisible = true;
-            _screenHeight = _graphics.PreferredBackBufferHeight;
-            _screenWidth = _graphics.PreferredBackBufferWidth;
+            _currentState = _nextState;
+            _currentState.IsActiveScene = true;
         }
 
-        protected override void Initialize()
-        {
-            base.Initialize();
-        }
+        _currentState.Update(gameTime);
 
-        protected override void LoadContent()
-        {
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
+        base.Update(gameTime);
+    }
 
-            _currentState = new MainMenuState(Content, GraphicsDevice, this);
-            _currentState.IsActiveScene= true;
-        }
+    protected override void Draw(GameTime gameTime)
+    {
+        _currentState.Draw(gameTime, _spriteBatch);
 
-        public void ChangeState(GameState state)
-        {
-            _nextState = state;
-        }
+        base.Draw(gameTime);
+    }
 
-
-        protected override void Update(GameTime gameTime)
-        {
-            KeyboardHelper.GetState();
-
-            if (_nextState != null)
-            {
-                _currentState = _nextState;
-                _currentState.IsActiveScene = true;
-            }
-
-            _currentState.Update(gameTime);
-
-            base.Update(gameTime);
-        }
-
-        protected override void Draw(GameTime gameTime)
-        {
-            _currentState.Draw(gameTime, _spriteBatch);
-
-            base.Draw(gameTime);
-        }
-
-        public GameState getCurrentState()
-        {
-            return _currentState;
-        }
+    public GameState GetCurrentState()
+    {
+        return _currentState;
     }
 }
