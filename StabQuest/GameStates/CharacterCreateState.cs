@@ -4,15 +4,12 @@ using Microsoft.Xna.Framework.Graphics;
 using StabQuest.UI;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StabQuest.GameStates
 {
     public class CharacterCreateState : GameState
     {
-       
+
         private Player _player;
         private List<GameComponent> _components;
         private TextBox _nameBox;
@@ -50,7 +47,7 @@ namespace StabQuest.GameStates
 
         private void MainMenuButton_Click(object sender, EventArgs e)
         {
-         
+
             _game._overWorldState = null;
             _game.ChangeState(new MainMenuState(_content, _graphicsDevice, _game));
         }
@@ -82,7 +79,7 @@ namespace StabQuest.GameStates
 
         public override void Update(GameTime gameTime)
         {
-            foreach(var component in _components)
+            foreach (var component in _components)
             {
                 component.Update(gameTime);
             }

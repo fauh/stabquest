@@ -4,10 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using StabQuest.Helpers;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StabQuest.GameStates
 {
@@ -18,7 +15,8 @@ namespace StabQuest.GameStates
         public CombatState(ContentManager content, GraphicsDevice graphicsDevice, Game1 game, Player player) : base(content, graphicsDevice, game)
         {
             _player = player;
-            foreach (var pc in _player.Characters) {
+            foreach (var pc in _player.Characters)
+            {
                 pc.CurrentHealth--;
                 pc.CurrentExperience += 25;
             }

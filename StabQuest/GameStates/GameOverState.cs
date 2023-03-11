@@ -4,9 +4,6 @@ using Microsoft.Xna.Framework.Graphics;
 using StabQuest.UI;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StabQuest.GameStates
 {
@@ -21,7 +18,7 @@ namespace StabQuest.GameStates
         {
             var buttonTexture = content.Load<Texture2D>("Images/button");
             _font = content.Load<SpriteFont>("MyFont");
-            _player= player;
+            _player = player;
             var mainMenuButton = new Button(new Vector2(300, 350), buttonTexture, _font)
             {
                 Text = "Main Menu"
@@ -29,31 +26,31 @@ namespace StabQuest.GameStates
 
             mainMenuButton.Click += MainMenuButton_Click;
 
-            _components = new List<GameComponent> { 
-                mainMenuButton 
+            _components = new List<GameComponent> {
+                mainMenuButton
             };
 
             IsActiveScene = true;
         }
 
         private void MainMenuButton_Click(object sender, EventArgs e)
-        {            
+        {
             _game.ChangeState(new MainMenuState(_content, _graphicsDevice, _game));
-            IsActiveScene= false;
+            IsActiveScene = false;
             _game._overWorldState = null;
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            if(!IsActiveScene)
+            if (!IsActiveScene)
             {
                 return;
             }
 
             _graphicsDevice.Clear(Color.Black);
             spriteBatch.Begin();
-            
-            foreach(var component in _components)
+
+            foreach (var component in _components)
             {
                 component.Draw(gameTime, spriteBatch);
             }
@@ -69,7 +66,7 @@ namespace StabQuest.GameStates
 
             spriteBatch.DrawString(_font, $"You reached dungeon level {_game._overWorldState.CurrentLevel}", new Vector2(175, 250), Color.White, 0, Vector2.Zero, 2, SpriteEffects.None, 1);
 
-            spriteBatch.End();      
+            spriteBatch.End();
         }
 
         public override void PostUpdate(GameTime gameTime)
@@ -79,9 +76,9 @@ namespace StabQuest.GameStates
 
         public override void Update(GameTime gameTime)
         {
-            foreach(var component in _components) 
+            foreach (var component in _components)
             {
-                component.Update(gameTime);    
+                component.Update(gameTime);
             }
         }
     }

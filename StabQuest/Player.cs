@@ -3,12 +3,11 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using StabQuest.DungeonLevels;
 using StabQuest.Helpers;
+using StabQuest.Services;
 using System.Collections.Generic;
 using System.Linq;
-using System.Xml.Linq;
-using Color = Microsoft.Xna.Framework.Color;
 using static StabQuest.Helpers.DiceHelper;
-using StabQuest.Services;
+using Color = Microsoft.Xna.Framework.Color;
 
 namespace StabQuest
 {
@@ -31,7 +30,7 @@ namespace StabQuest
             {
                 new Character("Sven", RollDice(4), RollDice(4), RollDice(4), RollDice(4), RollDice(4), RollDice(4), true),
                 new Character("Not Sven", RollDice(3), RollDice(3), RollDice(3), RollDice(3), RollDice(6), RollDice(6), true)
-            };            
+            };
         }
 
         public Player()
@@ -78,7 +77,7 @@ namespace StabQuest
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {   
+        {
             var playerSpriteEffect = SpriteEffects.None;
             if (this.Direction.Equals(CardinalDirections.LEFT))
             {

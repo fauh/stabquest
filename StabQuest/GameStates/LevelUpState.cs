@@ -4,10 +4,6 @@ using Microsoft.Xna.Framework.Graphics;
 using StabQuest.UI;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
 using static StabQuest.Helpers.DiceHelper;
 
 namespace StabQuest.GameStates
@@ -183,7 +179,7 @@ namespace StabQuest.GameStates
 
         private void CHA_DownClick(object sender, EventArgs e)
         {
-           StatDown(Stat.CHA);
+            StatDown(Stat.CHA);
         }
 
         private void CHA_UpClick(object sender, EventArgs e)
@@ -263,12 +259,12 @@ namespace StabQuest.GameStates
 
             spriteBatch.DrawString(_font, $"Unspent points: {_unspent}", new Vector2(200, 50), Color.White);
 
-            spriteBatch.DrawString(_font, $"STR: { _dirtyStatArray[(int)Stat.STR] }", new Vector2(200, 100), Color.White);
-            spriteBatch.DrawString(_font, $"DEX: { _dirtyStatArray[(int)Stat.DEX] }", new Vector2(200, 150), Color.White);
-            spriteBatch.DrawString(_font, $"CON: { _dirtyStatArray[(int)Stat.CON] }", new Vector2(200, 200), Color.White);
-            spriteBatch.DrawString(_font, $"WIS: { _dirtyStatArray[(int)Stat.WIS] }", new Vector2(200, 250), Color.White);
-            spriteBatch.DrawString(_font, $"INT: { _dirtyStatArray[(int)Stat.INT] }", new Vector2(200, 300), Color.White);
-            spriteBatch.DrawString(_font, $"CHA: { _dirtyStatArray[(int)Stat.CHA] }", new Vector2(200, 350), Color.White);
+            spriteBatch.DrawString(_font, $"STR: {_dirtyStatArray[(int)Stat.STR]}", new Vector2(200, 100), Color.White);
+            spriteBatch.DrawString(_font, $"DEX: {_dirtyStatArray[(int)Stat.DEX]}", new Vector2(200, 150), Color.White);
+            spriteBatch.DrawString(_font, $"CON: {_dirtyStatArray[(int)Stat.CON]}", new Vector2(200, 200), Color.White);
+            spriteBatch.DrawString(_font, $"WIS: {_dirtyStatArray[(int)Stat.WIS]}", new Vector2(200, 250), Color.White);
+            spriteBatch.DrawString(_font, $"INT: {_dirtyStatArray[(int)Stat.INT]}", new Vector2(200, 300), Color.White);
+            spriteBatch.DrawString(_font, $"CHA: {_dirtyStatArray[(int)Stat.CHA]}", new Vector2(200, 350), Color.White);
 
             spriteBatch.End();
         }

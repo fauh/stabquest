@@ -1,12 +1,8 @@
-﻿using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Reflection.Metadata;
+using Microsoft.Xna.Framework.Input;
+using System;
+using System.Text;
 
 namespace StabQuest.UI
 {
@@ -21,27 +17,25 @@ namespace StabQuest.UI
         StringBuilder _displayCharacters = new StringBuilder();
         private Rectangle _rectangle;
         private SpriteFont _font;
-        private GraphicsDevice _graphicsDevice;
 
-        public TextBox(int x, int y, int width, int height, SpriteFont font, Texture2D texture, GraphicsDevice graphicsDevice, Game game): this(new Rectangle(x,y,width,height), font, texture, graphicsDevice, game)
+        public TextBox(int x, int y, int width, int height, SpriteFont font, Texture2D texture, Game game) : this(new Rectangle(x, y, width, height), font, texture, game)
         {
         }
 
-        public TextBox(Rectangle rectangle, SpriteFont font, Texture2D texture, GraphicsDevice graphicsDevice, Game game)
+        public TextBox(Rectangle rectangle, SpriteFont font, Texture2D texture, Game game)
         {
-            
             _gw = game.Window;
-            _graphicsDevice= graphicsDevice;
             _rectangle = rectangle;
-            _hasFocus= false;
+            _hasFocus = false;
             _textIsDirty = false;
             _texture = texture;
             _font = font;
         }
 
-        public string Text {
+        public string Text
+        {
             get { return _displayCharacters.ToString(); }
-            set { _displayCharacters = new StringBuilder(value.ToString()); } 
+            set { _displayCharacters = new StringBuilder(value.ToString()); }
         }
 
         public static void RegisterFocusedButtonForTextInput(System.EventHandler<TextInputEventArgs> method)
@@ -70,7 +64,8 @@ namespace StabQuest.UI
 
                 if (_hasFocus)
                 {
-                    if (_textIsDirty) {
+                    if (_textIsDirty)
+                    {
                         Text = "";
                         _textIsDirty = true;
                     }
@@ -91,7 +86,8 @@ namespace StabQuest.UI
                 spriteBatch.Draw(_texture, new Vector2(_rectangle.X, _rectangle.Y), Color.Wheat);
                 spriteBatch.DrawString(_font, Text, new Vector2(_rectangle.X, _rectangle.Y), Color.Black);
             }
-            else {
+            else
+            {
                 spriteBatch.Draw(_texture, new Vector2(_rectangle.X, _rectangle.Y), Color.LightGray);
                 spriteBatch.DrawString(_font, Text, new Vector2(_rectangle.X, _rectangle.Y), Color.DarkGray);
             }

@@ -47,7 +47,7 @@ namespace StabQuest.GameStates
             _player = player;
             _player.Position = _currentDungeonLevel.EntryPoint;
             _player.CurrentDungeonLevel = _currentDungeonLevel;
-            _camera = new Camera(Game1.TILESIZE, game._screenHeight, game._screenWidth);
+            _camera = new Camera(Game1.TILESIZE, game.ScreenHeight, game.ScreenWidth);
             _dungeonLevels.Add(_currentDungeonLevel);
 
             _lightsTarget = new RenderTarget2D(graphicsDevice, graphicsDevice.PresentationParameters.BackBufferWidth, graphicsDevice.PresentationParameters.BackBufferHeight);
@@ -68,7 +68,7 @@ namespace StabQuest.GameStates
 
             // draw everything that doesnt care about light
             spriteBatch.Begin(SpriteSortMode.Immediate, transformMatrix: _camera.Transform);
-            var topLeft = new Vector2(_player.WorldPosition.X - _game._screenWidth / 2, _player.WorldPosition.Y - _game._screenHeight / 2);
+            var topLeft = new Vector2(_player.WorldPosition.X - _game.ScreenWidth / 2, _player.WorldPosition.Y - _game.ScreenHeight / 2);
             var topLeftWithMargin = new Vector2(topLeft.X + 10, topLeft.Y + 10);
             // spriteBatch.DrawString(_font, $"Current Level: {_currentLevel}", topLeftWithMargin, Color.White);
             // spriteBatch.DrawString(_font, $"ticks: {_ticksSinceLastCombat}", topLeftWithMargin, Color.White);
@@ -150,15 +150,18 @@ namespace StabQuest.GameStates
                 _enableCheats = !_enableCheats;
             }
 
-            if (_enableCheats) { 
-                
-                if (KeyboardHelper.CheckKeyPress(Keys.L)) {
+            if (_enableCheats)
+            {
+
+                if (KeyboardHelper.CheckKeyPress(Keys.L))
+                {
                     foreach (var pc in _player.Characters)
                     {
                         pc.CurrentHealth = 0;
                     }
                 }
-                if(KeyboardHelper.CheckKeyPress(Keys.H)) {
+                if (KeyboardHelper.CheckKeyPress(Keys.H))
+                {
                     foreach (var pc in _player.Characters)
                     {
                         pc.CurrentHealth++;
@@ -179,7 +182,8 @@ namespace StabQuest.GameStates
 
         private void CheckForAndExecuteLevelUp()
         {
-            if (!IsActiveScene) {
+            if (!IsActiveScene)
+            {
                 return;
             }
             if (_player.Characters.Any(c => c.ShouldLevelUp))
@@ -195,10 +199,12 @@ namespace StabQuest.GameStates
 
         private void CheckHealth()
         {
-            if(!IsActiveScene) {
+            if (!IsActiveScene)
+            {
                 return;
             }
-            if (_player.Characters.All(c => c.CurrentHealth <= 0)) { 
+            if (_player.Characters.All(c => c.CurrentHealth <= 0))
+            {
                 _game.ChangeState(new GameOverState(_content, _graphicsDevice, _game, _player));
                 IsActiveScene = false;
             }

@@ -16,21 +16,33 @@ public class Game1 : Game
 
     public OverworldState _overWorldState;
 
-    public int _screenHeight;
-    public int _screenWidth;
-
     public static int TILESIZE = 16;
     public static int WORLDSCALE = 1;
 
     private SoundService _soundService;
+
+    public bool IsFullScreen { get { return _graphics.IsFullScreen; } }
+    public int ScreenWidth { get { return _graphics.PreferredBackBufferWidth; } }
+    public int ScreenHeight { get { return _graphics.PreferredBackBufferHeight; } }
 
     public Game1()
     {
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
-        _screenHeight = _graphics.PreferredBackBufferHeight;
-        _screenWidth = _graphics.PreferredBackBufferWidth;
+    }
+
+    public void SetScreenSize(int width, int height)
+    {
+        _graphics.PreferredBackBufferHeight = height;
+        _graphics.PreferredBackBufferWidth = width;
+        _graphics.ApplyChanges();
+    }
+
+    public void SetFullScreen(bool isFullScreen)
+    {
+        _graphics.IsFullScreen = isFullScreen;
+        _graphics.ApplyChanges();
     }
 
     protected override void Initialize()
@@ -44,7 +56,7 @@ public class Game1 : Game
 
         _currentState = new MainMenuState(Content, GraphicsDevice, this);
         _currentState.IsActiveScene = true;
-        
+
         _soundService = SoundService.Instance;
         _soundService.Content = Content;
         _soundService.LoadSounds();

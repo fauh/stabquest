@@ -1,6 +1,6 @@
-﻿using Microsoft.Xna.Framework.Media;
+﻿using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 using System.Collections.Generic;
 
 namespace StabQuest.Services;
@@ -55,7 +55,7 @@ public sealed class SoundService
     {
         var effectToPlay = HandleMultiSourceEffects(effect);
 
-        volume = volume * (SoundEffectsVolumeFactor / 100);
+        volume = volume * (SoundEffectsVolumePercentage / 100);
 
         _soundEffects[effectToPlay].Play(volume, pitch, pan);
     }
@@ -64,7 +64,7 @@ public sealed class SoundService
     {
         var effectToPlay = HandleMultiSourceEffects(effect);
 
-        volume = volume * (SoundEffectsVolumeFactor / 100);
+        volume = volume * (SoundEffectsVolumePercentage / 100);
 
         var instance = _soundEffects[effectToPlay].CreateInstance();
         instance.Volume = volume;
@@ -75,7 +75,7 @@ public sealed class SoundService
 
     public void PlayBackgroundMusic()
     {
-        MediaPlayer.Volume= 1 * (BackgroundMusicVolumeFactor / 100);
+        MediaPlayer.Volume = 1 * (BackgroundMusicVolumePercentage / 100);
         MediaPlayer.Play(_backgroundSong1);
         _isBackgroundSong1Playing = true;
         MediaPlayer.IsRepeating = true;
