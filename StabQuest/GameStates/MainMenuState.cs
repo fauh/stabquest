@@ -25,7 +25,14 @@ namespace StabQuest.GameStates
 
             newGameButton.Click += NewGameButton_Click;
 
-            var quitButton = new Button(new Vector2(325, 325), buttonTexture, _font)
+            var optionsButton = new Button(new Vector2(325, 325), buttonTexture, _font)
+            {
+                Text = "Options"
+            };
+
+            optionsButton.Click += OptionsButton_Click;
+
+            var quitButton = new Button(new Vector2(325, 350), buttonTexture, _font)
             {
                 Text = "Quit"
             };
@@ -34,9 +41,15 @@ namespace StabQuest.GameStates
 
             _components = new List<GameComponent>() {
                 newGameButton,
+                optionsButton,
                 quitButton
             };
             IsActiveScene = true;
+        }
+
+        private void OptionsButton_Click(object sender, EventArgs e)
+        {
+            _game.ChangeState(new OptionsState(_content, _graphicsDevice, _game));
         }
 
         private void ExitGameButton_Click(object sender, EventArgs e)

@@ -10,7 +10,6 @@ namespace StabQuest.GameStates
 {
     internal class OptionsState : GameState
     {
-
         SoundService _soundService = SoundService.Instance;
         private bool _isFullScreen;
         private int _screenWidth;
@@ -101,7 +100,7 @@ namespace StabQuest.GameStates
             {
                 Text = "Save"
             };
-            var resetButton = new Button(new Vector2(150, 400), buttonTexture, _font)
+            var resetButton = new Button(new Vector2(200, 400), buttonTexture, _font)
             {
                 Text = "Reset"
             };
@@ -156,6 +155,8 @@ namespace StabQuest.GameStates
             _soundService.SoundEffectsVolumePercentage = SoundEffectsVolumePercentage;
             _game.SetFullScreen(_isFullScreen);
             _game.SetScreenSize(ScreenWidth, ScreenHeight);
+
+            _game.ChangeState(new MainMenuState(_content, _graphicsDevice, _game));
         }
 
         private void Reset()
@@ -170,10 +171,13 @@ namespace StabQuest.GameStates
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            _graphicsDevice.Clear(Color.Black);
+            spriteBatch.Begin();
             foreach (var component in _components)
             {
                 component.Draw(gameTime, spriteBatch);
             }
+            spriteBatch.End();
         }
 
         public override void PostUpdate(GameTime gameTime)
@@ -183,7 +187,10 @@ namespace StabQuest.GameStates
 
         public override void Update(GameTime gameTime)
         {
-            throw new NotImplementedException();
+            foreach (var component in _components)
+            {
+                component.Update(gameTime);
+            }
         }
     }
 }
