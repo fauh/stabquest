@@ -31,7 +31,7 @@ namespace StabQuest.GameStates
                 Text = "Start Game"
             };
 
-            _nameBox = new TextBox(new Rectangle(100, 100, 200, 30), font, buttonTexture, _graphicsDevice, _game);
+            _nameBox = new TextBox(new Rectangle(100, 100, 200, 30), font, buttonTexture, _game);
 
             mainMenuButton.Click += MainMenuButton_Click;
             launchButton.Click += Launch_Click;

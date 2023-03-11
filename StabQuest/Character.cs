@@ -1,15 +1,19 @@
-﻿using StabQuest.Helpers;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
+using static StabQuest.Helpers.DiceHelper;
 
 namespace StabQuest
 {
     public class Character
     {
+        private int _currentHealth;
+        private int _currentExperience;
         /// <summary>
         /// Simplied constructor, sets all stats to 0. IsPlayer = false
         /// </summary>
         /// <param name="name"></param>
-        public Character(string name) : this(name, 0, 0, 0, 0, 0, 0, false)
+        public Character(string name) : this(name, RollDice(4), RollDice(4), RollDice(4), RollDice(4), RollDice(4), RollDice(4), false)
         {
         }
 
@@ -25,56 +29,102 @@ namespace StabQuest
         /// <param name="cha"></param>
         public Character(string name, int str, int dex, int con, int _in, int wis, int cha, bool isPlayer)
         {
-            this._guid = new Guid();
-            this.Name = name;
-            this.Stats = new int[6];
+            _guid = new Guid();
+            Name = name;
+            Stats = new int[6];
 
+            Stats[(int)Stat.STR] = str;
+            Stats[(int)Stat.DEX] = dex;
+            Stats[(int)Stat.CON] = con;
+            Stats[(int)Stat.INT] = _in;
+            Stats[(int)Stat.WIS] = wis;
+            Stats[(int)Stat.CHA] = cha;
 
-            this.Stats[(int)Stat.STR] = str;
-            this.Stats[(int)Stat.DEX] = dex;
-            this.Stats[(int)Stat.CON] = con;
-            this.Stats[(int)Stat.INT] = _in;
-            this.Stats[(int)Stat.WIS] = wis;
-            this.Stats[(int)Stat.CHA] = cha;
+            IsPlayer = isPlayer;
 
-            this.IsPlayer = isPlayer;
+            MaxHealth = 10 + con;
+            CurrentHealth = MaxHealth;
 
-            this.MaxHealth = 10 + con;
-            this.CurrentHealth = MaxHealth;
+            Level = 0;
+            ShouldLevelUp = true;
 
+            IsDead = false;
 
+            CurrentExperience = 0;
         }
 
         public void Print()
         {
             Console.WriteLine($"----------");
-            Console.WriteLine($"Name: {this.Name}");
+            Console.WriteLine($"Name: {Name}");
             Console.WriteLine($"----------");
-            Console.WriteLine($"| STR: {this.Stats[(int)Stat.STR]} |");
-            Console.WriteLine($"| DEX: {this.Stats[(int)Stat.DEX]} |");
-            Console.WriteLine($"| CON: {this.Stats[(int)Stat.CON]} |");
-            Console.WriteLine($"| INT: {this.Stats[(int)Stat.INT]} |");
-            Console.WriteLine($"| WIS: {this.Stats[(int)Stat.WIS]} |");
-            Console.WriteLine($"| CHA: {this.Stats[(int)Stat.CHA]} |");
+            Console.WriteLine($"| STR: {Stats[(int)Stat.STR]} |");
+            Console.WriteLine($"| DEX: {Stats[(int)Stat.DEX]} |");
+            Console.WriteLine($"| CON: {Stats[(int)Stat.CON]} |");
+            Console.WriteLine($"| INT: {Stats[(int)Stat.INT]} |");
+            Console.WriteLine($"| WIS: {Stats[(int)Stat.WIS]} |");
+            Console.WriteLine($"| CHA: {Stats[(int)Stat.CHA]} |");
             Console.WriteLine($"-----------");
-            Console.WriteLine($"Health: {this.CurrentHealth}");
+            Console.WriteLine($"Health: {CurrentHealth}");
             Console.WriteLine($"Equipment:");
             //foreach (var equip in this.EquipmentList)
             //{
             //    equip.Print();
             //}
-            this.Weapon?.Print();
-            this.Armor?.Print();
+            Weapon?.Print();
+            Armor?.Print();
         }
 
         public int Level { get; set; }
+
+        public int CurrentExperience
+        {
+            get { return _currentExperience; }
+            set
+            {
+                _currentExperience = value;
+
+                while (_currentExperience >= ExperienceForNextLevel)
+                {
+                    LevelUp();
+                }
+            }
+        }
+
+        public void LevelUp()
+        {
+            Level++;
+            UnspentSkillPoints += ((10 + Level) / 10) + 1;
+            ShouldLevelUp = true;
+        }
+
+        public int ExperienceForNextLevel => Level * Level * 100;
+
+        public bool IsDead { get; set; }
 
         public string Name { get; set; }
 
         public int[] Stats { get; set; }
         public bool IsPlayer { get; }
         public int MaxHealth { get; set; }
-        public int CurrentHealth { get; set; }
+        public int CurrentHealth
+        {
+            get { return _currentHealth; }
+            set
+            {
+                _currentHealth = value;
+
+                if (_currentHealth >= MaxHealth)
+                {
+                    _currentHealth = MaxHealth;
+                }
+                if (_currentHealth <= 0)
+                {
+                    _currentHealth = 0;
+                    IsDead = true;
+                }
+            }
+        }
 
         public Armor Armor { get; set; }
 
@@ -82,9 +132,7 @@ namespace StabQuest
 
         public Guid _guid { get; }
         public int UnspentSkillPoints { get; internal set; }
-        public bool ShouldLevelUp { get; internal set; }
-        public int CurrentExperience { get; internal set; }
-        public bool IsDead { get; internal set; }
+        public bool ShouldLevelUp { get; set; }
 
         public int GetStatValue(Stat stat)
         {
@@ -98,12 +146,14 @@ namespace StabQuest
 
         }
 
+
+
         public void MakeAttack(Character other)
         {
-            var weaponDamage = DiceHelper.RollDice(this.Weapon.DiceCount, this.Weapon.FaceCount) + GetStatValue(Weapon.Modifier);
+            var weaponDamage = RollDice(Weapon.DiceCount, Weapon.FaceCount) + GetStatValue(Weapon.Modifier);
 
 
-            Console.WriteLine($"{this.Name} attacks {other.Name} with its {this.Weapon.Name} doing {weaponDamage} damage!");
+            Console.WriteLine($"{Name} attacks {other.Name} with its {Weapon.Name} doing {weaponDamage} damage!");
 
             other.TakeDamage(weaponDamage);
 
@@ -111,18 +161,19 @@ namespace StabQuest
 
         public void RegainHealth(int healing)
         {
-            this.CurrentHealth += healing;
+            CurrentHealth += healing;
             if (CurrentHealth > MaxHealth)
             {
                 CurrentHealth = MaxHealth;
             }
         }
 
+
         public void TakeDamage(int damage)
         {
             if (CurrentHealth > 0)
             {
-                var armorReduction = this.Armor is null ? 0 : this.Armor.BaseArmorValue + GetStatValue(Armor.Modifier);
+                var armorReduction = Armor is null ? 0 : Armor.BaseArmorValue + GetStatValue(Armor.Modifier);
 
                 var reducedDamage = damage - armorReduction;
 
@@ -134,26 +185,45 @@ namespace StabQuest
                 if (armorReduction > 0)
                 {
 
-                    Console.WriteLine($"{this.Name} takes {reducedDamage}, reduced by its {this.Armor.Name}.");
+                    Console.WriteLine($"{Name} takes {reducedDamage}, reduced by its {Armor.Name}.");
                 }
                 else
                 {
-                    Console.WriteLine($"{this.Name} takes {reducedDamage}");
+                    Console.WriteLine($"{Name} takes {reducedDamage}");
                 }
 
 
-                this.CurrentHealth -= reducedDamage;
+                CurrentHealth -= reducedDamage;
 
-                if (this.CurrentHealth <= 0)
+                if (CurrentHealth <= 0)
                 {
-                    this.CurrentHealth = 0;
-                    Console.WriteLine($"{this.Name} succumbs to its wounds and dies.");
+                    CurrentHealth = 0;
+                    Console.WriteLine($"{Name} succumbs to its wounds and dies.");
                 }
             }
             else
             {
-                Console.WriteLine($"{this.Name} is already dead...");
+                Console.WriteLine($"{Name} is already dead...");
             }
+        }
+
+        public void PrintCharacter(SpriteBatch spriteBatch, Character pc, int xvalue, SpriteFont font)
+        {
+            var pos = new Vector2(xvalue, 10);
+
+            spriteBatch.DrawString(font, $"Player Name: {pc.Name}", pos, Color.White);
+            spriteBatch.DrawString(font, $"Level: {pc.Level}", new Vector2(pos.X, pos.Y + 20), Color.White);
+            spriteBatch.DrawString(font, $"EXP: {pc.CurrentExperience} / {pc.ExperienceForNextLevel}", new Vector2(pos.X, pos.Y + 40), Color.White);
+            spriteBatch.DrawString(font, $"Health: {pc.CurrentHealth} / {pc.MaxHealth}", new Vector2(pos.X, pos.Y + 60), Color.White);
+            spriteBatch.DrawString(font, $"Armor: {pc.Armor?.Name ?? "None"}", new Vector2(pos.X, pos.Y + 80), Color.White);
+            spriteBatch.DrawString(font, $"Weapon: {pc.Weapon?.Name ?? "None"}", new Vector2(pos.X, pos.Y + 100), Color.White);
+            spriteBatch.DrawString(font, $"STR: {pc.GetStatValue(Stat.STR)}", new Vector2(pos.X, pos.Y + 120), Color.White);
+            spriteBatch.DrawString(font, $"DEX: {pc.GetStatValue(Stat.DEX)}", new Vector2(pos.X, pos.Y + 140), Color.White);
+            spriteBatch.DrawString(font, $"CON: {pc.GetStatValue(Stat.CON)}", new Vector2(pos.X, pos.Y + 160), Color.White);
+            spriteBatch.DrawString(font, $"WIS: {pc.GetStatValue(Stat.WIS)}", new Vector2(pos.X, pos.Y + 180), Color.White);
+            spriteBatch.DrawString(font, $"INT: {pc.GetStatValue(Stat.INT)}", new Vector2(pos.X, pos.Y + 200), Color.White);
+            spriteBatch.DrawString(font, $"CHA: {pc.GetStatValue(Stat.CHA)}", new Vector2(pos.X, pos.Y + 220), Color.White);
+
         }
     }
 }
