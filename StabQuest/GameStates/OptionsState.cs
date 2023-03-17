@@ -105,11 +105,18 @@ namespace StabQuest.GameStates
                 Text = "Reset"
             };
 
+            var mainMenuButton = new Button(new Vector2(350, 400), buttonTexture, _font)
+            {
+                Text = "Main Menu"
+            };
+
             saveButton.Click += SaveButton_Click;
             resetButton.Click += ResetButton_Click;
+            mainMenuButton.Click += MainMenuButton_Click;
             _components = new List<GameComponent>() {
                 saveButton,
-                resetButton
+                resetButton,
+                mainMenuButton
             };
         }
 
@@ -121,6 +128,11 @@ namespace StabQuest.GameStates
         private void SaveButton_Click(object sender, EventArgs e)
         {
             SaveSettings();
+        }
+
+        private void MainMenuButton_Click(object sender, EventArgs e)
+        {
+            _game.ChangeState(new MainMenuState(_content, _graphicsDevice, _game));
         }
 
         private void SetBackgroundMusicVolume(int volume)
@@ -155,8 +167,8 @@ namespace StabQuest.GameStates
             _soundService.SoundEffectsVolumePercentage = SoundEffectsVolumePercentage;
             _game.SetFullScreen(_isFullScreen);
             _game.SetScreenSize(ScreenWidth, ScreenHeight);
+            _isDirty = false;
 
-            _game.ChangeState(new MainMenuState(_content, _graphicsDevice, _game));
         }
 
         private void Reset()
