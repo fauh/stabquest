@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace StabQuest.Legacy_CombatSim
 {
@@ -14,6 +10,9 @@ namespace StabQuest.Legacy_CombatSim
             { "Ork",    new int[] { 4, 0, 3, 0, 0, 0}},
             { "Bandit", new int[] { 2, 2, 2, 1, 1, 1}}
         };
+
+
+
 
     }
 }

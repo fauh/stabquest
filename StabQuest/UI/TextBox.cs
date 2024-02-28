@@ -1,12 +1,9 @@
-﻿using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Reflection.Metadata;
+using Microsoft.Xna.Framework.Input;
+using StabQuest.Helpers;
+using System;
+using System.Text;
 
 namespace StabQuest.UI
 {
@@ -15,7 +12,7 @@ namespace StabQuest.UI
 
         private static GameWindow _gw;
 
-        bool _hasFocus = true;
+        bool _hasFocus = false;
         private bool _textIsDirty;
         private Texture2D _texture;
         StringBuilder _displayCharacters = new StringBuilder();
@@ -23,25 +20,26 @@ namespace StabQuest.UI
         private SpriteFont _font;
         private GraphicsDevice _graphicsDevice;
 
-        public TextBox(int x, int y, int width, int height, SpriteFont font, Texture2D texture, GraphicsDevice graphicsDevice, Game game): this(new Rectangle(x,y,width,height), font, texture, graphicsDevice, game)
+        public TextBox(int x, int y, int width, int height, SpriteFont font, Texture2D texture, GraphicsDevice graphicsDevice, Game game) : this(new Rectangle(x, y, width, height), font, texture, graphicsDevice, game)
         {
         }
 
         public TextBox(Rectangle rectangle, SpriteFont font, Texture2D texture, GraphicsDevice graphicsDevice, Game game)
         {
-            
+
             _gw = game.Window;
-            _graphicsDevice= graphicsDevice;
+            _graphicsDevice = graphicsDevice;
             _rectangle = rectangle;
-            _hasFocus= false;
+            _hasFocus = false;
             _textIsDirty = false;
             _texture = texture;
             _font = font;
         }
 
-        public string Text {
+        public string Text
+        {
             get { return _displayCharacters.ToString(); }
-            set { _displayCharacters = new StringBuilder(value.ToString()); } 
+            set { _displayCharacters = new StringBuilder(value.ToString()); }
         }
 
         public static void RegisterFocusedButtonForTextInput(System.EventHandler<TextInputEventArgs> method)
@@ -55,22 +53,40 @@ namespace StabQuest.UI
 
         public void OnInput(object sender, TextInputEventArgs e)
         {
-            var c = e.Character;
-            _displayCharacters.Append(c);
-            Console.WriteLine(_displayCharacters);
+            if (e.Key == Keys.Back)
+            {
+                if (_displayCharacters.Length > 0)
+                {
+                    _displayCharacters.Remove(_displayCharacters.Length - 1, 1);
+                }
+            }
+            else if (e.Key == Keys.Enter)
+            {
+                _hasFocus = false;
+                UnRegisterFocusedButtonForTextInput(OnInput);
+            }
+            else
+            {
+                Console.WriteLine(e.Character);
+                var c = e.Character;
+
+                _displayCharacters.Append(c);
+                Console.WriteLine(_displayCharacters);
+            }
         }
 
         public override void Update(GameTime gameTime)
         {
-            var mouseState = Mouse.GetState();
-            var isClicked = mouseState.LeftButton == ButtonState.Pressed;
-            if (_rectangle.Contains(mouseState.Position) && isClicked)
+            MouseHelper.Update();
+
+            if (_rectangle.Contains(MouseHelper.GetMousePosition()) && MouseHelper.LeftClicked)
             {
                 _hasFocus = !_hasFocus;
 
                 if (_hasFocus)
                 {
-                    if (_textIsDirty) {
+                    if (_textIsDirty)
+                    {
                         Text = "";
                         _textIsDirty = true;
                     }
@@ -79,6 +95,7 @@ namespace StabQuest.UI
                 else
                 {
                     UnRegisterFocusedButtonForTextInput(OnInput);
+
                 }
             }
         }
@@ -86,12 +103,21 @@ namespace StabQuest.UI
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            if (_hasFocus)
+            MouseHelper.Draw(gameTime, spriteBatch, _font);
+            /*
+            Add for debugging!
+            spriteBatch.DrawString(_font, $"MouseCoords: X{MouseHelper.GetMousePosition().X} :Y{MouseHelper.GetMousePosition().Y}", new Vector2(0, 0), Color.White);
+            spriteBatch.DrawString(_font, $"Left Clicked: {_hasFocus}", new Vector2(0, 20), Color.White);
+            */
+
+            if (_hasFocus || Text.Length > 0)
             {
                 spriteBatch.Draw(_texture, new Vector2(_rectangle.X, _rectangle.Y), Color.Wheat);
                 spriteBatch.DrawString(_font, Text, new Vector2(_rectangle.X, _rectangle.Y), Color.Black);
+
             }
-            else {
+            else
+            {
                 spriteBatch.Draw(_texture, new Vector2(_rectangle.X, _rectangle.Y), Color.LightGray);
                 spriteBatch.DrawString(_font, Text, new Vector2(_rectangle.X, _rectangle.Y), Color.DarkGray);
             }
